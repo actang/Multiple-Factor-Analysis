@@ -3,7 +3,7 @@ library("MFAg")
 url <- "https://raw.githubusercontent.com/ucb-stat243/stat243-fall-2016/master/problem-sets/final-project/data/wines.csv"
 data <- read.csv(url)
 
-mfa <- function(data, sets, ncomps = NULL, center = TRUE, scale = TRUE){
+mfa <- function(data, sets, supplData, ncomps = NULL, center = TRUE, scale = TRUE){
 
   Y <- list()
   X <- list()
@@ -74,6 +74,20 @@ mfa <- function(data, sets, ncomps = NULL, center = TRUE, scale = TRUE){
     partial_inertia[,i] <- conts[,i]*Eigen[i]
   }
 
+  # Calculating the scaled matrix for supplementary data
+  Y_suppl <- scale(data[,supplData], center = center, scale = scale) / sqrt(length(sets) + 1)
+  SVD_suppl <- svd(Y_suppl)
+  D_suppl.K <- diag(SVD_suppl$d)
+  X_suppl <- Y_suppl/D_suppl.K[1,1]
+
+  # Calculating supplementary loadings
+  Q_suppl <- t(X_suppl) %*% M %*% P %*% solve(Del)
+  Q_suppl_ncomp <- Q_suppl[,1:ncomp]
+
+  # Computing supplementary factor scores
+
+  F_suppl <- length(sets)*X_suppl %*% Q_suppl_ncomp
+  print(F_suppl)
 
   # return
   res <- list("Eigenvalues" = Eigen,
@@ -90,7 +104,7 @@ print.mfaClass <- function(mfa_out){
 }
 
 mfa_out <- mfa(data = data, sets = list(2:7, 8:13, 14:19, 20:24, 25:30, 31:35, 36:39, 40:45, 46:50, 51:54),
-               supplData <- list(55:58), ncomps = 2, center = TRUE, scale = TRUE)
+               supplData <- c(55:58), ncomps = 2, center = TRUE, scale = TRUE)
 
 
 # Optional: GSVD of X not using GSVD function
