@@ -1,0 +1,30 @@
+---
+title: "Getting Started with MFA Package"
+author: "Saurabh Belsare, Ankush Desai, Jieun Kim and Allen Tang"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Getting Started with cointoss}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, echo = FALSE, message = FALSE}
+knitr::opts_chunk$set(collapse = T, comment = "#>")
+library(mfa)
+```
+
+## Multi-Factor Analysis
+
+Add high-level description about the package here ....
+
+
+## Creating a `mfa`
+
+The first step is to create a ....:
+
+```{r}
+#Add code here
+```
+
+
