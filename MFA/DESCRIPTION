@@ -1,9 +1,16 @@
-Package: MFA
+Package: mfa
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Multi Factor Analysis
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: Who to complain to <yourfault@somewhere.net>
-Description: More about what it does (maybe more than one line)
-License: What license is it under?
+Depends:
+    R (>= 3.1.0)
+Author: Saurabh Belsare, Ankush Desai, Jieun Kim and Allen Tang.
+Maintainer: Ankush Desai <ankushdesai@gmail.com>
+Description: This package provides basic functionality for performing Multi-
+    Factor Analysis. It was developed as a part of the Stat 243 course.
+License: MIT License.
 LazyData: TRUE
+RoxygenNote: 5.0.1
+Suggests: knitr,
+    rmarkdown
+VignetteBuilder: knitr
