@@ -11,6 +11,10 @@ Description: This package provides basic functionality for performing Multi-
 License: MIT License.
 LazyData: TRUE
 RoxygenNote: 5.0.1
+Collate:
+  MFAHelperFunctions.R
+  MFA.R
+
 Suggests: knitr,
     rmarkdown
 VignetteBuilder: knitr

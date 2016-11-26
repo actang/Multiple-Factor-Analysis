@@ -5,6 +5,10 @@ data <- read.csv(url)
 
 mfa <- function(data, sets, ncomps = NULL, center = TRUE, scale = TRUE){
 
+  ## Check that all the arguments are correct
+  checkScaleOrCenter(scale, ncol(data))
+  checkScaleOrCenter(center,ncol(data))
+  
   Y <- list()
   X <- list()
   G <- list()

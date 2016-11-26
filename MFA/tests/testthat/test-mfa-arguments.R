@@ -15,14 +15,20 @@ test_that("test second 'sets' argument of the mfa function", {
 
 test_that("test third 'ncomps' argument of the mfa function", {
   #make sure that the ncomps is less than the number of possible components and its numeric
+  expect_error(checkNComponents("2"))
 })
 
-test_that("test fourth 'center' argument of the mfa function", {
-  #make sure that the center argument is either TRUE, FALSE or a numeric vector
-})
 
-test_that("test fifth 'scale' argument of the mfa function", {
+test_that("test fourth 'center' or fifth 'scale' argument of the mfa function", {
   #make sure that the scale argument is either TRUE, FALSE or a numeric vector
+  #this is an error as the size if bigger max count
+  expect_error(checkScaleOrCenter(c(1, 2, 4), 2))
+  #this is correct
+  expect_true(checkScaleOrCenter(c(1, 2, 4), 3))
+  #this is error as it only expects numeric vectors
+  expect_error(checkScaleOrCenter(c(1, "ff", "4"), 2))
+  #boolean is fine
+  expect_true(checkScaleOrCenter(TRUE, 2))
 })
 
 

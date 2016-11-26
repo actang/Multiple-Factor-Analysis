@@ -24,7 +24,7 @@ test_that("mfa function prints the object correctly", {
   
 })
 
-test_that("mfa function plots the auxiliary output tables correctly" {
+test_that("mfa function plots the auxiliary output tables correctly", {
   
 })
 

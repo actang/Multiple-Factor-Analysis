@@ -1,4 +1,3 @@
-source("mfa.R")
 ##########################################################
 # Helper function for printing and plotting the mfa object
 #########################################################
@@ -10,10 +9,8 @@ print.mfa <- function(p, ...)
   invisible(p)
 }
 
-print(mfa_out)
-
 plot.mfa <- function(p) {
-  
+  #TODO: Plot the plot functions implemented by Allen
 }
 
 
@@ -36,7 +33,7 @@ CtrObserToDimension <- function(p) {
   #make sure that the parameter p is of class type mfa
   if(class(p) != "mfa")
   {
-    stop("Eigenvalues expects the argument to be of class mfaClass")
+    stop("CtrObserToDimension expects the argument to be of class mfaClass")
   }
   return(p$CtrObserToDimension)
 }
@@ -45,7 +42,7 @@ CtrVarToDimension <- function(p) {
   #make sure that the parameter p is of class type mfa
   if(class(p) != "mfa")
   {
-    stop("Eigenvalues expects the argument to be of class mfaClass")
+    stop("CtrVarToDimension expects the argument to be of class mfaClass")
   }
   return(p$CtrVarToDimension)
 }
@@ -54,7 +51,41 @@ CtrTableToDimension <- function(p) {
   #make sure that the parameter p is of class type mfa
   if(class(p) != "mfa")
   {
-    stop("Eigenvalues expects the argument to be of class mfaClass")
+    stop("CtrTableToDimension expects the argument to be of class mfaClass")
   }
   return(p$CtrTableToDimension)
+}
+
+
+##################################################################
+## Helper functions to check that the arguments passed are correct
+##################################################################
+
+checkScaleOrCenter <- function(param, maxCount) {
+  if(is.vector(param, mode = "numeric") || is.logical(param))
+  {
+    if(is.vector(param, mode = "numeric") && length(param) > maxCount)
+    {
+      stop("Size of the scales or center vector must be less than number of columns in data")
+    }
+    else
+    {
+      return(TRUE)
+    }
+  }
+  else 
+  {
+    stop("Scale or center parameter must either be a numeric vector or a boolean value (TRUE or FALSE)")
+  }
+}
+
+checkNComponents <- function(ncomps) {
+  if(is.integer(ncomps))
+  {
+    return(TRUE)
+  }
+  else
+  {
+    stop("Number of Components parameter must be integer")
+  }
 }
