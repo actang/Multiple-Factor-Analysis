@@ -41,9 +41,8 @@ mfa <- function(data, sets, ncomps = NULL, center = TRUE, scale = TRUE){
   Q <- gSVD$v
   Del <- diag(gSVD$d)
 
-  Singular <- gSVD$d
-  Eigen <- (Singular)^2
-  inertia <- Eigen/sum(Eigen) * 100 # percentage
+  Eigen <- (gSVD$d)^2
+  
 
   # pick n components (dimensions) <- need change -- not 1:n but 1: ---
   P.n <- P[,1:ncomps]
@@ -60,6 +59,7 @@ mfa <- function(data, sets, ncomps = NULL, center = TRUE, scale = TRUE){
   }
 
   # Calculating the contributions
+  #TODO: populate the variables
   conts <- matrix(nrow = length(sets),ncol = ncomps)
   cont <- a * Q.n^2
   for (i in 1:length(sets)){
@@ -76,42 +76,19 @@ mfa <- function(data, sets, ncomps = NULL, center = TRUE, scale = TRUE){
 
 
   # return
-  res <- list("Eigenvalues" = Eigen,
-              "Compromise factor scores" = Fscores,
-              "Partial factor scores by assessor" = Partial_fs,
-              "Matrix of loadings" = Q.n,
-              "Compromise contributions" = cont)
-  class(res) <- append(class(res), "mfaClass")
+  res <- list("EigenValues" = Eigen,
+              "CompromiseFactorScores" = Fscores,
+              "PartialFactorScores" = Partial_fs,
+              "MatrixLoadings" = Q.n,
+              #next 3 arguments needs to be fixed
+              "CtrObserToDimension" = "x",
+              "CtrVarToDimension" = "y",
+              "CtrTableToDimension" = "z")
+  
+  class(res) <- "mfa"
   return(res)
 }
 
-# This is the definition of the print function for the mfaClass class.
-print.mfaClass <- function(mfa_out){
-}
-
 mfa_out <- mfa(data = data, sets = list(2:7, 8:13, 14:19, 20:24, 25:30, 31:35, 36:39, 40:45, 46:50, 51:54),
-               supplData <- list(55:58), ncomps = 2, center = TRUE, scale = TRUE)
+               ncomps = 2, center = TRUE, scale = TRUE)
 
-
-# Optional: GSVD of X not using GSVD function
-# notation follows Abdi 2007: tildaU is P; tildaV is Q in our problem
-
-#tildaX <- sqrt(M) %*% X %*% sqrt(A)
-#gSVD <- svd(tildaX) # = GSVD(X, PLin = rep(1/12, 12), PCol = a)
-#
-#P <- gSVD$u
-#Q <- gSVD$v
-#Del <- diag(gSVD$d)
-#
-#t(Q) %*% Q # I
-#t(P) %*% P # I
-#P %*% Del %*% t(Q) # Xtilda
-#
-#tildaU <- sqrt(solve(M)) %*% P
-#tildaV <- sqrt(solve(A)) %*% Q
-#tildaDel <- Del
-#
-#t(tildaU) %*% M %*% tildaU # I
-#t(tildaV) %*% A %*% tildaV # I
-#tildaU %*% tildaDel %*% t(tildaV) # X
-#
