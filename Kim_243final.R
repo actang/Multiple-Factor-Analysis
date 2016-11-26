@@ -1,5 +1,6 @@
 #install.packages("MFAg")
 library("MFAg")
+library("boot")
 url <- "https://raw.githubusercontent.com/ucb-stat243/stat243-fall-2016/master/problem-sets/final-project/data/wines.csv"
 data <- read.csv(url)
 
@@ -59,12 +60,26 @@ mfa <- function(data, sets, supplData, ncomps = NULL, center = TRUE, scale = TRU
     Partial_fs[[K]] <- length(sets) * alpha1[K] * X[,sets[[K]]-1] %*% Q.n[sets[[K]]-1, ]
   }
 
-  # Calculating the contributions
-  conts <- matrix(nrow = length(sets),ncol = ncomps)
-  cont <- a * Q.n^2
+  # Contribution of an observation to a dimension
+
+  lamda <- matrix(0,nrow = nrow(Fscores), ncol = ncol(Fscores))
+  for (i in 1:ncol(Fscores)){
+    lamda[,i] <- (M %*% Fscores^2)[,i]
+  }
+
+  cntr_obs <- matrix(0,nrow = nrow(Fscores), ncol = ncol(Fscores))
+  for (i in 1:ncol(Fscores)){
+    cntr_obs[,i] <- lamda[,i]/sum(lamda[,i])
+  }
+
+  # Calculating the contributions of a variable to a dimension
+  cntr_var <- a * Q.n^2
+
+  # Calculating the contributions of a table to a dimension
+  cntr_tbl <- matrix(nrow = length(sets),ncol = ncomps)
   for (i in 1:length(sets)){
     for (j in 1:ncol(Q.n)){
-    conts[i,j] <- sum(cont[sets[[i]]-1,j])
+    cntr_tbl[i,j] <- sum(cntr_var[sets[[i]]-1,j])
     }
   }
 
@@ -82,12 +97,50 @@ mfa <- function(data, sets, supplData, ncomps = NULL, center = TRUE, scale = TRU
 
   # Calculating supplementary loadings
   Q_suppl <- t(X_suppl) %*% M %*% P %*% solve(Del)
-  Q_suppl_ncomp <- Q_suppl[,1:ncomp]
+  Q_suppl_ncomp <- Q_suppl[,1:ncomps]
 
   # Computing supplementary factor scores
 
   F_suppl <- length(sets)*X_suppl %*% Q_suppl_ncomp
-  print(F_suppl)
+
+  # Computing the bootstrapped values
+
+  nBootstrap <- 1000
+  boot <- replicate(nBootstrap,sample(1:length(sets),size=length(sets), replace=T))
+
+  mysum <- list()
+  F_boot <- list()
+  for(k in 1:nBootstrap){
+    mysum[[k]] <- matrix(0,nrow = nrow(data),ncol = ncomps)
+    for(i in boot[,k]){
+      mysum[[k]] <- mysum[[k]] + Partial_fs[[i]]
+    }
+    F_boot[[k]] <- mysum[[k]] / length(sets)
+  }
+
+  # Calculating the mean value for the bootstrap samples
+  sum_boot <- matrix(0,nrow = nrow(data),ncol = ncomps)
+  for (k in 1:nBootstrap){
+    sum_boot <- sum_boot + F_boot[[k]]
+  }
+  mean_boot <- sum_boot/nBootstrap
+
+  sub_mean_boot <- list()
+  for (k in 1:nBootstrap){
+    sub_mean_boot[[k]] <- F_boot[[k]] - mean_boot
+  }
+
+  # Calculating the variance and standard deviation for the bootstrap samples
+  var_boot <- matrix(0,nrow = nrow(data),ncol = ncomps)
+  for(k in 1:nBootstrap){
+    var_boot <- var_boot + sub_mean_boot[[k]]^2
+  }
+  var_boot <- var_boot/nBootstrap
+  sd_boot <- var_boot^(0.5)
+
+  # Calculating the boostrap ratios
+
+  ratio_boot <- mean_boot/sd_boot
 
   # return
   res <- list("Eigenvalues" = Eigen,
@@ -128,4 +181,3 @@ mfa_out <- mfa(data = data, sets = list(2:7, 8:13, 14:19, 20:24, 25:30, 31:35, 3
 #t(tildaU) %*% M %*% tildaU # I
 #t(tildaV) %*% A %*% tildaV # I
 #tildaU %*% tildaDel %*% t(tildaV) # X
-#
