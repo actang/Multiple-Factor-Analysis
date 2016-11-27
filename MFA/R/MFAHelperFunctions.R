@@ -80,12 +80,39 @@ checkScaleOrCenter <- function(param, maxCount) {
 }
 
 checkNComponents <- function(ncomps) {
-  if(is.integer(ncomps))
+  if(ncomps%%1 == 0)
   {
     return(TRUE)
   }
   else
   {
+    print(ncomps)
     stop("Number of Components parameter must be integer")
   }
 }
+
+checkData <- function(data)
+{
+
+    if(!(is.data.frame(data) || is.matrix(data)))
+    {
+      stop("Data parameter must be matrix or data frame") 
+    }
+    else
+    {
+      return(TRUE)
+    }
+
+}
+
+checkSets <- function(sets) {
+    if(!is.list(sets))
+    {
+      stop("Sets input must be a list") 
+    }
+    else
+    {
+      return(TRUE)
+    }
+}
+

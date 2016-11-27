@@ -8,6 +8,13 @@ mfa <- function(data, sets, ncomps = NULL, center = TRUE, scale = TRUE){
   ## Check that all the arguments are correct
   checkScaleOrCenter(scale, ncol(data))
   checkScaleOrCenter(center,ncol(data))
+  checkSets(sets)
+  checkData(data)
+  
+  if(!is.null(ncomps))
+  {
+    checkNComponents(ncomps) 
+  }
   
   Y <- list()
   X <- list()
@@ -47,6 +54,11 @@ mfa <- function(data, sets, ncomps = NULL, center = TRUE, scale = TRUE){
 
   Eigen <- (gSVD$d)^2
   
+  #set n components to size of eigen values
+  if(is.null(ncomps))
+  {
+    ncomps = length(Eigen)
+  }
 
   # pick n components (dimensions) <- need change -- not 1:n but 1: ---
   P.n <- P[,1:ncomps]
@@ -92,7 +104,4 @@ mfa <- function(data, sets, ncomps = NULL, center = TRUE, scale = TRUE){
   class(res) <- "mfa"
   return(res)
 }
-
-mfa_out <- mfa(data = data, sets = list(2:7, 8:13, 14:19, 20:24, 25:30, 31:35, 36:39, 40:45, 46:50, 51:54),
-               ncomps = 2, center = TRUE, scale = TRUE)
 
