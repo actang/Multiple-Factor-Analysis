@@ -5,6 +5,62 @@ library("psych")
 url <- "https://raw.githubusercontent.com/ucb-stat243/stat243-fall-2016/master/problem-sets/final-project/data/wines.csv"
 data <- read.csv(url)
 
+  # Computing Rv coefficient
+
+RV <- function(Xi,Xj){
+  numerator <- (tr((Xi%*%t(Xi) * Xj%*%t(Xj))))
+  denominator <- (sqrt((tr((Xi%*%t(Xi) * Xi%*%t(Xi))))*(tr((Xj%*%t(Xj) * Xj%*%t(Xj))))))
+  Rv <- numerator/denominator
+  return(Rv)
+}
+
+# Computing Rv table coefficient
+
+Rv_table <- function(data, sets){
+  Rv <- matrix(0,nrow = length(sets),ncol = length(sets))
+  tempK <- as.matrix(data[ ,sets[[K]]])
+  X[[K]] <- tempK
+  for(i in 1:length(sets)){
+    for(j in 1:length(sets)){
+      numerator <- (tr((X[[i]]%*%t(X[[i]]) * X[[j]]%*%t(X[[j]]))))
+      denominator <- (sqrt((tr((X[[i]]%*%t(X[[i]]) * X[[i]]%*%t(X[[i]]))))*(tr((X[[j]]%*%t(X[[j]]) * X[[j]]%*%t(X[[j]]))))))
+      Rv_table[i,j] <- numerator/denominator
+    }
+  }
+  return(Rv_table)
+}
+
+
+# Computing Lg coefficient
+
+Lg <- function(Xi,Xj){
+  alpha1 <- NA
+  SVDi <- svd(Xi)
+  SVDj <- svd(Xj)
+  alpha1_i <- (SVDi$d[1])^(-2)
+  alpha1_j <- (SVDj$d[1])^(-2)
+  Lg <- (tr((Xi%*%t(Xi) * Xj%*%t(Xj)))) * alpha1_i * alpha1_j
+  return(Lg)
+}
+
+# Computing Lg table coefficient
+
+Lg_table <- function(data, sets){
+  X <- list()
+  alpha1 <- NA
+  tempK <- as.matrix(data[ ,sets[[K]]])
+  X[[K]] <- tempK
+  SVD <- svd(X[[K]])
+  alpha1[K] <- (SVD$d[1])^(-2)
+  Lg <- matrix(0,nrow = length(sets),ncol = length(sets))
+  for(i in 1:length(sets)){
+    for(j in 1:length(sets)){
+      Lg[i,j] <- (tr((X[[i]]%*%t(X[[i]]) * X[[j]]%*%t(X[[j]])))) * alpha1[i] * alpha1[j]
+    }
+  }
+  return(Lg)
+}
+
 mfa <- function(data, sets, supplData, ncomps = NULL, center = TRUE, scale = TRUE){
 
   Y <- list()
@@ -37,25 +93,25 @@ mfa <- function(data, sets, supplData, ncomps = NULL, center = TRUE, scale = TRU
   # mass matrix M
   M <-  diag(rep(1/nrow(data), nrow(data)))
 
-  # Computing Rv coefficient
-
-  Rv <- matrix(0,nrow = length(sets),ncol = length(sets))
-  for(i in 1:length(sets)){
-    for(j in 1:length(sets)){
-      numerator <- (tr((X[[i]]%*%t(X[[i]]) * X[[j]]%*%t(X[[j]]))))
-      denominator <- (sqrt((tr((X[[i]]%*%t(X[[i]]) * X[[i]]%*%t(X[[i]]))))*(tr((X[[j]]%*%t(X[[j]]) * X[[j]]%*%t(X[[j]]))))))
-      Rv[i,j] <- numerator/denominator
-    }
-  }
-
-  # Computing Lg coefficient
-
-  Lg <- matrix(0,nrow = length(sets),ncol = length(sets))
-  for(i in 1:length(sets)){
-    for(j in 1:length(sets)){
-      Lg[i,j] <- (tr((X[[i]]%*%t(X[[i]]) * X[[j]]%*%t(X[[j]])))) * alpha1[i] * alpha1[j]
-    }
-  }
+#  # Computing Rv coefficient
+#
+#  Rv <- matrix(0,nrow = length(sets),ncol = length(sets))
+#  for(i in 1:length(sets)){
+#    for(j in 1:length(sets)){
+#      numerator <- (tr((X[[i]]%*%t(X[[i]]) * X[[j]]%*%t(X[[j]]))))
+#      denominator <- (sqrt((tr((X[[i]]%*%t(X[[i]]) * X[[i]]%*%t(X[[i]]))))*(tr((X[[j]]%*%t(X[[j]]) * X[[j]]%*%t(X[[j]]))))))
+#      Rv[i,j] <- numerator/denominator
+#    }
+#  }
+#
+#  # Computing Lg coefficient
+#
+#  Lg <- matrix(0,nrow = length(sets),ncol = length(sets))
+#  for(i in 1:length(sets)){
+#    for(j in 1:length(sets)){
+#      Lg[i,j] <- (tr((X[[i]]%*%t(X[[i]]) * X[[j]]%*%t(X[[j]])))) * alpha1[i] * alpha1[j]
+#    }
+#  }
 
   # GSVD of X
   X <- do.call("cbind", X)
@@ -169,7 +225,10 @@ mfa <- function(data, sets, supplData, ncomps = NULL, center = TRUE, scale = TRU
               "Compromise factor scores" = Fscores,
               "Partial factor scores by assessor" = Partial_fs,
               "Matrix of loadings" = Q.n,
-              "Compromise contributions" = cntr_var)
+              "Compromise contributions across observations" = cntr_obs,
+              "Compromise contributions across variables" = cntr_var,
+              "Compromise contributions across tables" = cntr_tab,
+              "Labels" = labels)
   class(res) <- append(class(res), "mfaClass")
   return(res)
 }

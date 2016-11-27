@@ -13,7 +13,7 @@ LazyData: TRUE
 RoxygenNote: 5.0.1
 Collate:
   MFAHelperFunctions.R
-  MFA.R
+  mfa.R
 Suggests: knitr,
     rmarkdown
 VignetteBuilder: knitr
