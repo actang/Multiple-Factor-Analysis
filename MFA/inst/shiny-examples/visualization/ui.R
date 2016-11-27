@@ -19,7 +19,7 @@ shinyUI(fluidPage(
       sliderInput(inputId = "ncomps",
                   label = "Number of Components to Analyze",
                   min = 1,
-                  max = 4,
+                  max = 10,
                   value = 2),
       checkboxInput(inputId = "center",
                     label = "Center the data before analysis?",
@@ -28,12 +28,19 @@ shinyUI(fluidPage(
                     label = "Scale the data before analysis?",
                     value = TRUE),
       selectInput(inputId = "plot_type",
-                  label = h3("Select plot type"),
+                  label = "Select plot type",
                   choices = list(
                     "Eigenvalues" = "eigenvalues",
-                    "Choice 2" = 2,
-                    "Choice 3" = 3),
-                  selected = 1)
+                    "Factor Scores" = "factor_scores",
+                    "Partial Factor Scores" = "partial_factor_scores",
+                    "Variable Loadings" = "variable_loadings"),
+                  selected = 1),
+      textInput(inputId = "wine_number",
+                label = "Optional: Input Item Numbers [1, 12]",
+                value = ""),
+      textInput(inputId = "accessor_number",
+                label = "Optional: Input Accessor Numbers [1, 10]",
+                value = "")
     ),
 
     mainPanel(
