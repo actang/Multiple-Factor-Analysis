@@ -1,6 +1,7 @@
 #install.packages("MFAg")
 library("MFAg")
 library("boot")
+library("psych")
 url <- "https://raw.githubusercontent.com/ucb-stat243/stat243-fall-2016/master/problem-sets/final-project/data/wines.csv"
 data <- read.csv(url)
 
@@ -11,6 +12,7 @@ mfa <- function(data, sets, supplData, ncomps = NULL, center = TRUE, scale = TRU
   G <- list()
   alpha1 <- NA
   a <- NA
+  labels <- data[,1]
 
   # Compute weight matrix A
   for(K in 1:length(sets)){
@@ -34,6 +36,26 @@ mfa <- function(data, sets, supplData, ncomps = NULL, center = TRUE, scale = TRU
 
   # mass matrix M
   M <-  diag(rep(1/nrow(data), nrow(data)))
+
+  # Computing Rv coefficient
+
+  Rv <- matrix(0,nrow = length(sets),ncol = length(sets))
+  for(i in 1:length(sets)){
+    for(j in 1:length(sets)){
+      numerator <- (tr((X[[i]]%*%t(X[[i]]) * X[[j]]%*%t(X[[j]]))))
+      denominator <- (sqrt((tr((X[[i]]%*%t(X[[i]]) * X[[i]]%*%t(X[[i]]))))*(tr((X[[j]]%*%t(X[[j]]) * X[[j]]%*%t(X[[j]]))))))
+      Rv[i,j] <- numerator/denominator
+    }
+  }
+
+  # Computing Lg coefficient
+
+  Lg <- matrix(0,nrow = length(sets),ncol = length(sets))
+  for(i in 1:length(sets)){
+    for(j in 1:length(sets)){
+      Lg[i,j] <- (tr((X[[i]]%*%t(X[[i]]) * X[[j]]%*%t(X[[j]])))) * alpha1[i] * alpha1[j]
+    }
+  }
 
   # GSVD of X
   X <- do.call("cbind", X)
@@ -86,7 +108,7 @@ mfa <- function(data, sets, supplData, ncomps = NULL, center = TRUE, scale = TRU
   # Calculating the partial inertia
   partial_inertia <- matrix(nrow = length(sets),ncol = ncomps)
   for(i in 1:ncomps){
-    partial_inertia[,i] <- conts[,i]*Eigen[i]
+    partial_inertia[,i] <- cntr_tbl[,i]*Eigen[i]
   }
 
   # Calculating the scaled matrix for supplementary data
@@ -147,7 +169,7 @@ mfa <- function(data, sets, supplData, ncomps = NULL, center = TRUE, scale = TRU
               "Compromise factor scores" = Fscores,
               "Partial factor scores by assessor" = Partial_fs,
               "Matrix of loadings" = Q.n,
-              "Compromise contributions" = cont)
+              "Compromise contributions" = cntr_var)
   class(res) <- append(class(res), "mfaClass")
   return(res)
 }
