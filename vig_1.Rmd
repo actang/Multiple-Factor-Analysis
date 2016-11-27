@@ -1,0 +1,46 @@
+---
+title: "Getting Started with MFA Package"
+author: "Saurabh Belsare, Ankush Desai, Jieun Kim and Allen Tang"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Getting Started with cointoss}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, echo = FALSE, message = FALSE}
+knitr::opts_chunk$set(collapse = T, comment = "#>")
+library(mfa)
+```
+
+## Multi-Factor Analysis
+
+The package `"mfa"` implements a statistical multivariate technique called Multiple Factor Analysis (MFA) and visualizes the compromise of the tables, partial factor scores, and variable loadings of given dimensions (i.e., components). Additionally, this package provides a set of complementary functions and methods for: (1) summaries of eigenvalues, (2) contributions (by observations, variables, and tables, respectively), (3) $R_V$ and $L_g$ coefficients, and (4) bootstrapping. 
+
+## Creating a `mfa`
+
+The first step is to create a `"mfa"` object with the function `mfa()`:
+
+```{r}
+mymfa <- mfa()
+mymfa
+```
+
+By default, `mfa()` creates an object with pre-processed matrix by centering and normalizing each column such that its mean is equal to 0 and the sum of the square values of all its elements is equal to 1. You can change the defaults with arguments `center` and `scale`:
+
+```{r}
+not_centered <- mfa(..., center = FALSE)
+not_normalized <- mfa(..., scale = FALSE)
+```
+
+## Visualizing 
+
+You can use the function `plot()` to create a graphic with
+```{r, fig.show='hold'}
+plot(mymfa)
+```
+
+
+
+
