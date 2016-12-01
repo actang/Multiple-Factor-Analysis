@@ -121,16 +121,16 @@ CtrTableToDimension <- function(p) {
 ##################################################################
 
 plot_eigenvalues <- function(obj){
-  ylim <- c(0, 1.1 * max(obj$Eigenvalues))
-  plot <- barplot(obj$Eigenvalues, main = "Eigenvalues", ylim = ylim)
-  text(x = plot, y = obj$Eigenvalues,
-       label = round(obj$Eigenvalues, digit=2), col = "red", cex = 0.8)
+  ylim <- c(0, 1.1 * max(obj$EigenValues))
+  plot <- barplot(obj$EigenValues, main = "Eigenvalues", ylim = ylim)
+  text(x = plot, y = obj$EigenValues,
+       label = round(obj$EigenValues, digit=2), col = "red", cex = 0.8)
 }
 
 plot_factor_scores <- function(obj){
-  ncomps = ncol(obj$"Compromise factor scores")
+  ncomps = ncol(obj$CompromiseFactorScores)
   if (ncomps >= 2) {
-    F_score = obj$"Compromise factor scores"
+    F_score = obj$CompromiseFactorScores
     plot(F_score,
          xlab = "First Principal Component",
          ylab = "Second Principal Component",
@@ -145,8 +145,8 @@ plot_factor_scores <- function(obj){
 
 plot_partial_factor_scores <- function(obj, accessor_number=0, wine_number=0){
   plot_factor_scores(obj)
-  partial_scores = obj$"Partial factor scores by assessor"
-  factor_scores = obj$"Compromise factor scores"
+  partial_scores = obj$PartialFactorScores
+  factor_scores = obj$CompromiseFactorScores
   if (accessor_number != 0) {
     i = accessor_number
     for (j in 1:nrow(factor_scores)) {
@@ -156,7 +156,6 @@ plot_partial_factor_scores <- function(obj, accessor_number=0, wine_number=0){
                factor_scores[j, 1], factor_scores[j, 2],
                lty = 3, lwd = 0.8, col = 'blue')
     }
-    title(sub=paste("with Partial Factor Scores of accessor ", accessor_number))
   }
   if (wine_number != 0) {
     j = wine_number
@@ -167,9 +166,17 @@ plot_partial_factor_scores <- function(obj, accessor_number=0, wine_number=0){
                factor_scores[j, 1], factor_scores[j, 2],
                lty = 3, lwd = 0.8, col = 'blue')
     }
-    title(sub=paste("with Partial Factor Scores of item ", wine_number))
   }
-  if (wine_number == 0 && accessor_number == 0) {
+  if (accessor_number != 0 && wine_number == 0){
+    title(sub=paste("with Partial Factor Scores of accessor", accessor_number))
+  }
+  else if(accessor_number == 0 && wine_number != 0){
+    title(sub=paste("with Partial Factor Scores of item", wine_number))
+  }
+  else if(accessor_number != 0 && wine_number != 0){
+    title(sub=paste("with Partial Factor Scores of accessor", accessor_number, "and item", wine_number))
+  }
+  else{
     for (j in 1:nrow(factor_scores)) {
       for (i in 1:length(partial_scores)) {
         points(partial_scores[[i]][j, 1], partial_scores[[i]][j, 2],
@@ -184,12 +191,12 @@ plot_partial_factor_scores <- function(obj, accessor_number=0, wine_number=0){
 }
 
 plot_variable_loadings <- function(obj, accessor_number=0){
-  partial_scores = obj$"Partial factor scores by assessor"
-  loadings = obj$"Matrix of loadings"
+  partial_scores = obj$PartialFactorScores
+  loadings = obj$MatrixLoadings
   if (accessor_number == 0) {
     accessor_number = 1
   }
-  ncomps = ncol(obj$"Compromise factor scores")
+  ncomps = ncol(obj$CompromiseFactorScores)
   if (ncomps >= 2) {
     plot(partial_scores[[accessor_number]],
          xlab = "First Principal Component",
@@ -202,8 +209,8 @@ plot_variable_loadings <- function(obj, accessor_number=0){
     )
     abline(h = 0, v = 0, lty=2)
     text(partial_scores[[accessor_number]], as.vector(obj$"Labels"), pos=3, col = "red")
-    points(loadings[sets[[accessor_number]]-1, ], pch = 24)
-    text(loadings[sets[[accessor_number]]-1, ], as.vector((obj$"Column Names")[sets[[accessor_number]]-1]),
+    points(loadings[obj$Sets[[accessor_number]]-1, ], pch = 24)
+    text(loadings[obj$Sets[[accessor_number]]-1, ], as.vector((obj$"ColumnNames")[obj$Sets[[accessor_number]]-1]),
          pos=3, col = "blue", cex=0.5)
     title(sub=paste("with Partial Factor Scores of accessor ", accessor_number))
   }
@@ -258,7 +265,7 @@ checkData <- function(data)
 }
 
 checkSets <- function(sets) {
-    if(!is.list(sets))
+    if(!is.list(obj$Sets))
     {
       stop("Sets input must be a list")
     }
