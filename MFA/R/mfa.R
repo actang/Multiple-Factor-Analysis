@@ -27,7 +27,7 @@ data <- read.csv(url, col.names = col_names)
 #' @param ncomps This is the number of components for the MFA
 #' @param center This is a boolean flag which decides whether to center the data
 #' @param scale This is a boolean flag which decides whether to scale the data
-#' @return res Returns a vector containing all the output information computed by the MFA analysis
+#' @return res Returns a list containing all the output information computed by the MFA analysis
 #' @export
 #' @examples
 #' # default
@@ -78,7 +78,12 @@ mfa <- function(data, sets, supplData, ncomps = NULL, center = TRUE, scale = TRU
   Eigen <- (Singular)^2
   inertia <- Eigen/sum(Eigen) * 100 # percentage
 
-  # Pick n components (dimensions) <- need change -- not 1:n but 1: ---
+  # If ncomps == NULL, all components should be extracted
+  if(is.null(ncomps)){
+    ncomps == length(Eigen)
+  }
+
+  # Pick n components (dimensions)
   P.n <- P[,1:ncomps]
   Del.n <- Del[1:ncomps, 1:ncomps]
   Q.n <- Q[,1:ncomps]
@@ -116,7 +121,7 @@ mfa <- function(data, sets, supplData, ncomps = NULL, center = TRUE, scale = TRU
   }
 
   # Calculating the partial inertia
-  partial_inertia <- matrix(nrow = length(sets),ncol = ncomps)
+  partial_inertia <- matrix(nrow = length(sets), ncol = ncomps)
   for(i in 1:ncomps){
     partial_inertia[,i] <- cntr_tbl[,i]*Eigen[i]
   }
@@ -127,9 +132,14 @@ mfa <- function(data, sets, supplData, ncomps = NULL, center = TRUE, scale = TRU
   D_suppl.K <- diag(SVD_suppl$d)
   X_suppl <- Y_suppl/D_suppl.K[1,1]
 
+  # If ncomps == NULL, all components should be extracted
+  if(is.null(ncomps)){
+    ncomps_suppl == length(D_suppl.K)
+  } else {ncomps_suppl == ncomps}
+
   # Calculating supplementary loadings
   Q_suppl <- t(X_suppl) %*% M %*% P %*% solve(Del)
-  Q_suppl_ncomp <- Q_suppl[,1:ncomps]
+  Q_suppl_ncomp <- Q_suppl[,1:ncomps_suppl]
 
   # Computing supplementary factor scores
 
@@ -186,7 +196,12 @@ mfa <- function(data, sets, supplData, ncomps = NULL, center = TRUE, scale = TRU
               "ColumnNames" = colnames(data),
               "Sets" = sets,
               "BootstrapRatio" = ratio_boot,
-              "ncomps" = ncomps)
+              "ncomps" = ncomps,
+              "SupplementaryEigenValues" = D_suppl.K,
+              "SupplementaryCompromiseFactorScores" = F_supp,
+              "SupplementaryMatrixLoadings" = Q_suppl_ncomp,
+              "Supplementaryncomps" = suppl_ncomps
+              )
   class(res) <- "mfa"
   return(res)
 }
