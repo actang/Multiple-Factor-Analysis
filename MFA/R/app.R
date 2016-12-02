@@ -33,7 +33,8 @@ ui <- shinyUI(fluidPage(
                     "Eigenvalues" = "eigenvalues",
                     "Factor Scores" = "factor_scores",
                     "Partial Factor Scores" = "partial_factor_scores",
-                    "Variable Loadings" = "variable_loadings"),
+                    "Variable Loadings" = "variable_loadings",
+                    "Bootstrap Ratio" = "boot_ratio"),
                   selected = 1),
       uiOutput("ui1"),
       uiOutput("ui2")
@@ -118,7 +119,8 @@ server <- shinyServer(function(input, output) {
           accessor_number = 0
         }
         plot_variable_loadings(result, accessor_number)
-      }
+      },
+      "boot_ratio" = plot_boot_ratio(result)
     )
   })
 
@@ -135,7 +137,10 @@ server <- shinyServer(function(input, output) {
         paste('Partial factor scores projected into the compromise as supplementary elements. Each assessor is represented by a dot, and for each item a line connects the item factor scores to the partial factors scores of a given assessor for this item'),
 
       "variable_loadings" =
-        paste('Partial factor scores and variable loadings for the first two dimensions of the compromise space. The loadings have been re-scaled to have a variance equal the singular values of the compromise analysis.')
+        paste('Partial factor scores and variable loadings for the first two dimensions of the compromise space. The loadings have been re-scaled to have a variance equal the singular values of the compromise analysis.'),
+
+      "boot_ratio" =
+        paste('Bootstrap ratios of the compromise space. The plot shows the n-th dimensions of the compromise space. If you are interested in other principle component space, use the slidebar on the left to select other dimensions.')
     )
   })
 
