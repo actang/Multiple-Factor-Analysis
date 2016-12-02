@@ -1,5 +1,10 @@
+####################################################################################################
+# In this file we provide test-cases to ensure that the values returned by mfa function are correct
+####################################################################################################
+
 context("Test cases for testing the return value of mfa function")
 
+# make sure that the object returned by mfa function is of type mfa
 test_that("mfa functions returns an object of class mfa", {
   url <- "https://raw.githubusercontent.com/ucb-stat243/stat243-fall-2016/master/problem-sets/final-project/data/wines.csv"
   data <- read.csv(url)
@@ -8,6 +13,8 @@ test_that("mfa functions returns an object of class mfa", {
   expect_is(mfa_local, "mfa")
 })
 
+# make sure that the eigen values returned by mfa function is the same as that mentioned in the paper.
+# we use the data-set given as a reference for testing our implementation of mfa function.
 test_that("mfa function returns correct eigenvalues for the fixed data-set", {
   url <- "https://raw.githubusercontent.com/ucb-stat243/stat243-fall-2016/master/problem-sets/final-project/data/wines.csv"
   data <- read.csv(url)
@@ -18,6 +25,8 @@ test_that("mfa function returns correct eigenvalues for the fixed data-set", {
   expect_equal(expectedEigenValuesFromPaper, mfa_local$EigenValues)
 })
 
+# make sure that the common factor scores returned by mfa function is the same as that mentioned in the paper.
+# we use the data-set given as a reference for testing our implementation of mfa function.
 test_that("mfa function returns correct common factor scores for the fixed data-set", {
   url <- "https://raw.githubusercontent.com/ucb-stat243/stat243-fall-2016/master/problem-sets/final-project/data/wines.csv"
   data <- read.csv(url)
@@ -30,6 +39,8 @@ test_that("mfa function returns correct common factor scores for the fixed data-
   expect_equal(expectedCommonFactorFromPaperCol2, mfa_local$CompromiseFactorScores[,2])
 })
 
+# make sure that the factor loadings returned by mfa function is the same as that mentioned in the paper within an error bound.
+# we use the data-set given as a reference for testing our implementation of mfa function.
 test_that("mfa function returns correct factor loadings for the fixed data-set", {
   url <- "https://raw.githubusercontent.com/ucb-stat243/stat243-fall-2016/master/problem-sets/final-project/data/wines.csv"
   data <- read.csv(url)
