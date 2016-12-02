@@ -40,7 +40,17 @@ Rv_table <- function(data, sets){
 }
 
 
-# Computing Lg coefficient
+# Computing Lg table coefficient
+#' @title Lg
+#' @description Computes the LG coefficients to study the Between-Table Structure
+#' @param Xi represents the first table
+#' @param Xj represents the second table
+#' @return Lg coefficient for Xi and Xj
+#' @export
+#' @examples
+#' # default
+#' lg_coef <- Lg(table1, table2)
+#'
 
 Lg <- function(Xi,Xj){
   alpha1 <- NA
@@ -52,7 +62,18 @@ Lg <- function(Xi,Xj){
   return(Lg)
 }
 
+
 # Computing Lg table coefficient
+#' @title Lg_table
+#' @description Computes the LG coefficients to study the Between-Table Structure
+#' @param data represents the data-set that contains all the tables
+#' @param sets represents the list of vector used to identify the tables
+#' @return LG coefficient for the data-set
+#' @export
+#' @examples
+#' # default
+#' lg_coef <- Lg(dataset, sets = list(1:3, 4:5, 6:10))
+#'
 
 Lg_table <- function(data, sets){
   X <- list()
@@ -137,7 +158,14 @@ CtrTableToDimension <- function(p) {
 ##################################################################
 ## Plot functions
 ##################################################################
-
+#' @title plot_eigenvalues
+#' @description Plot the eigenvalues of the MFA construction
+#' @param obj Output returned from the MFA class construction
+#' @export
+#' @examples
+#' # default
+#' plot_eigenvalues(obj)
+#'
 plot_eigenvalues <- function(obj){
   ylim <- c(0, 1.1 * max(obj$EigenValues))
   plot <- barplot(obj$EigenValues, main = "Eigenvalues", ylim = ylim)
@@ -145,6 +173,14 @@ plot_eigenvalues <- function(obj){
        label = round(obj$EigenValues, digit=2), col = "red", cex = 0.8)
 }
 
+#' @title plot_factor_scores
+#' @description Plot the factor scores of the MFA construction
+#' @param obj Output returned from the MFA class construction
+#' @export
+#' @examples
+#' # default
+#' plot_factor_scores(obj)
+#'
 plot_factor_scores <- function(obj){
   ncomps = ncol(obj$CompromiseFactorScores)
   if (ncomps >= 2) {
@@ -161,6 +197,16 @@ plot_factor_scores <- function(obj){
   }
 }
 
+#' @title plot_partial_factor_scores
+#' @description Plot the partial factor scores of the MFA construction
+#' @param obj Output returned from the MFA class construction
+#' @param accessor_numer Plot a given accessor by its index number (default: all accessors)
+#' @param wine_number Plot a given wine number by its index number (default: all wines)
+#' @export
+#' @examples
+#' # default
+#' plot_partial_factor_scores(obj)
+#'
 plot_partial_factor_scores <- function(obj, accessor_number=0, wine_number=0){
   plot_factor_scores(obj)
   partial_scores = obj$PartialFactorScores
@@ -208,6 +254,15 @@ plot_partial_factor_scores <- function(obj, accessor_number=0, wine_number=0){
   }
 }
 
+#' @title plot_variable_loadings
+#' @description Plot the variable loadings of the MFA construction
+#' @param obj Output returned from the MFA class construction
+#' @param accessor_numer Plot a given accessor by its index number (default: all accessors)
+#' @export
+#' @examples
+#' # default
+#' plot_variable_loadings(obj)
+#'
 plot_variable_loadings <- function(obj, accessor_number=0){
   partial_scores = obj$PartialFactorScores
   loadings = obj$MatrixLoadings
@@ -234,12 +289,20 @@ plot_variable_loadings <- function(obj, accessor_number=0){
   }
 }
 
+#' @title plot_boot_ratio
+#' @description Plot the bootstrap ratio of the MFA construction
+#' @param obj Output returned from the MFA class construction
+#' @export
+#' @examples
+#' # default
+#' plot_boot_ratio(obj)
+#'
 plot_boot_ratio <- function(obj){
   for(i in 1:obj$ncomps){
     ylim <- c(-1.1 * max(obj$BootstrapRatio[,i]), 1.1 * max(obj$BootstrapRatio[,i]))
-    plot <- barplot(obj$BootstrapRatio[,i], main = "Bootstrap Ratios", ylim = ylim)
+    plot <- barplot(obj$BootstrapRatio[,i], main = "Bootstrap Ratios", ylim = ylim, col = ifelse(abs(obj$BootstrapRatio[,i]) < 3, 'gray',ifelse(obj$BootstrapRatio[,i]< 0,'green','blue')))
     text(x = plot, y = obj$BootstrapRatio[,i],
-       label = round(obj$BootstrapRatio[,i], digit=2), col = "red", cex = 0.8)
+       label = round(obj$BootstrapRatio[,i], digit=2), col = ifelse(abs(obj$BootstrapRatio[,i]) < 3, 'gray',ifelse(obj$BootstrapRatio[,i]< 0,'green','blue')), cex = 0.8, pos = ifelse(obj$BootstrapRatio[,i]< 0, 1, 3), offset = 0.2)
   }
 }
 
