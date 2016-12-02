@@ -1,3 +1,13 @@
+#' @title RV
+#' @description Computes the RV coefficients to study the Between-Table Structure
+#' @param Xi represents the first table
+#' @param Xj represents the second table
+#' @return RV coefficient for Xi and Xj
+#' @export
+#' @examples
+#' # default
+#' rv_coef <- RV(table1, table2)
+#'
 RV <- function(Xi,Xj){
   numerator <- (tr((Xi%*%t(Xi) * Xj%*%t(Xj))))
   denominator <- (sqrt((tr((Xi%*%t(Xi) * Xi%*%t(Xi))))*(tr((Xj%*%t(Xj) * Xj%*%t(Xj))))))
@@ -5,8 +15,16 @@ RV <- function(Xi,Xj){
   return(Rv)
 }
 
-# Computing Rv table coefficient
-
+#' @title Rv_table
+#' @description Computes the RV coefficients to study the Between-Table Structure
+#' @param data represents the data-set that contains all the tables
+#' @param sets represents the list of vector used to identify the tables
+#' @return RV coefficient for the data-set
+#' @export
+#' @examples
+#' # default
+#' rv_coef <- RV_table(dataset, sets = list(1:3, 4:5, 6:10))
+#'
 Rv_table <- function(data, sets){
   Rv <- matrix(0,nrow = length(sets),ncol = length(sets))
   tempK <- as.matrix(data[ ,sets[[K]]])

@@ -52,9 +52,6 @@ ui <- shinyUI(fluidPage(
 
 ))
 
-source("mfa.R")
-source("MFAHelperFunctions.R")
-
 server <- shinyServer(function(input, output) {
 
   output$plot <- renderPlot({
