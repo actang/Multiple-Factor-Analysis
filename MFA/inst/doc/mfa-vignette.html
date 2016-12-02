@@ -12,7 +12,7 @@
 
 <meta name="author" content="Saurabh Belsare, Ankush Desai, Jieun Kim and Allen Tang" />
 
-<meta name="date" content="2016-11-26" />
+<meta name="date" content="2016-12-02" />
 
 <title>Getting Started with MFA Package</title>
 
@@ -70,18 +70,82 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">Getting Started with MFA Package</h1>
 <h4 class="author"><em>Saurabh Belsare, Ankush Desai, Jieun Kim and Allen Tang</em></h4>
-<h4 class="date"><em>2016-11-26</em></h4>
+<h4 class="date"><em>2016-12-02</em></h4>
 
 
 
-<div id="multi-factor-analysis" class="section level2">
-<h2>Multi-Factor Analysis</h2>
-<p>Add high-level description about the package here ….</p>
+<div id="multi-factor-analysis" class="section level1">
+<h1>Multi-Factor Analysis</h1>
+<p>The package <code>&quot;mfa&quot;</code> implements a statistical multivariate technique called Multiple Factor Analysis (MFA). In addition to the main <code>mfa</code> function, it provides a set of complementary functions and methods to compute summaries of eigenvalues, contributions, coefficients to study the between-table structure (both <span class="math inline">\(R_V\)</span> and <span class="math inline">\(L_g\)</span>), and bootstrapping to estimate the stability of the compromise factor scores.</p>
+<p>For visualization, it includes functions for five types of plots: (1) a bar-chart for the eigenvalues, (2) a scatterplot of the common factor scores, (3) a scatterplot of the partial factor scores by block and by observation, (4) a scatterplot of the loadings of given dimensions (i.e., components), and (5) a bar-chart for bootstrap ratios. A Shiny App is available for an interactive visualization.</p>
+<div id="main-function-creating-a-mfa" class="section level2">
+<h2>Main Function: Creating a <code>mfa</code></h2>
+<p>The first step is to create a <code>&quot;mfa&quot;</code> object with the function <code>mfa()</code>:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mymfa &lt;-<span class="st"> </span>function(data, sets, supplData, <span class="dt">ncomps =</span> <span class="ot">NULL</span>, <span class="dt">center =</span> <span class="ot">TRUE</span>, <span class="dt">scale =</span> <span class="ot">TRUE</span>)
+mymfa</code></pre></div>
+<p>This is the main mfa function that implements all the calculations for performing the Multiple Factor Analysis. The function takes six arguments:</p>
+<ul>
+<li><code>data</code>: the input data, which contains only the assessor inputs,</li>
+<li><code>sets</code>: the column number list demarcating columns for each assessor,</li>
+<li><code>supplData</code>: the list of supplementary data for an additional factor analysis,</li>
+<li><code>ncomps</code>: the number of components for the MFA,</li>
+<li><code>center</code>: a boolean flag which decides whether to center the data,</li>
+<li><code>scale</code>: a boolean flag which decides whether to scale the data.</li>
+</ul>
+<p>By default, <code>ncomps = NULL</code> indicate that all possible components should be extracted. But the user can specify a number (e.g., <code>ncomps = 2</code>).</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ncomps_2 &lt;-<span class="st"> </span><span class="kw">mfa</span>(..., <span class="dt">ncomps =</span> <span class="dv">2</span>)        
+ncomps_null &lt;-<span class="st"> </span><span class="kw">mfa</span>(..., <span class="dt">ncomps =</span> <span class="ot">NULL</span>)  <span class="co"># extract all components</span></code></pre></div>
+<p>Also by default, <code>mfa()</code> creates an object with pre-processed matrix by centering and normalizing each column such that its mean is equal to 0 and the sum of the square values of all its elements is equal to 1. You can change the defaults with arguments <code>center</code> and <code>scale</code>:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">not_centered &lt;-<span class="st"> </span><span class="kw">mfa</span>(..., <span class="dt">center =</span> <span class="ot">FALSE</span>)
+not_normalized &lt;-<span class="st"> </span><span class="kw">mfa</span>(..., <span class="dt">scale =</span> <span class="ot">FALSE</span>)</code></pre></div>
+<p>The function returns a list containing all the output information computed by the MFA analysis. It includes:</p>
+<ul>
+<li><strong>Main Output</strong>: the eigenvalues, compromise factor scroes, matrix loadings, and contributions (by observation, variable, and table);</li>
+<li><strong>Additional information</strong>: labels, column names of the data, sets, bootstrap ratios, and the number of components;</li>
+<li><strong>Supplementary Output</strong>: eigenvalues, compromise factor scores, matrix loadings, and the number of components.</li>
+</ul>
 </div>
-<div id="creating-a-mfa" class="section level2">
-<h2>Creating a <code>mfa</code></h2>
-<p>The first step is to create a ….:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Add code here</span></code></pre></div>
+<div id="complementary-functions" class="section level2">
+<h2>Complementary Functions:</h2>
+<div id="summaries-of-eigenvalues" class="section level3">
+<h3>Summaries of eigenvalues</h3>
+<p>The package provides the summaries of eigenvalues that include each component’s singular values, eigenvalues, cumulative eigenvalues, % inertia, and cumulative % inertia.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">Eigenvalues</span>(mymfa)</code></pre></div>
+</div>
+<div id="contributions" class="section level3">
+<h3>Contributions</h3>
+<p>The package provides three complementary functions to print (1) contribution of an observation to a dimension, (2) contribution of a variable to a dimension, and (3) contribution of a table to a dimension.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">CtrObserToDimension</span>(mymfa)
+<span class="kw">CtrVarToDimension</span>(mymfa)
+<span class="kw">CtrTableToDimension</span>(mymfa)</code></pre></div>
+</div>
+<div id="between-table-structure" class="section level3">
+<h3>Between-table structure</h3>
+<p>To evaluate the similarity between two tables, this package provides functions for computing <span class="math inline">\(R_V\)</span> and <span class="math inline">\(L_g\)</span> coefficients. For <span class="math inline">\(R_V\)</span> coefficient, <code>RV()</code> takes two tables as the arguments and computes the cofficient for two tables. Additionally, <code>Rv_table()</code> takes a data set and a list with sets of variables and computes a matrix of <span class="math inline">\(R_V\)</span> coefficients. For <span class="math inline">\(L_g\)</span> coefficient, this package provides <code>Lg()</code> and <code>Lg_table()</code>; their usage parallels that of <span class="math inline">\(R_V\)</span> coefficient.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># RV</span>
+rv_coef &lt;-<span class="st"> </span><span class="kw">RV</span>(table1, table2)
+rv_table &lt;-<span class="st"> </span><span class="kw">RV_table</span>(dataset, <span class="dt">sets =</span> <span class="kw">list</span>(<span class="dv">1</span>:<span class="dv">3</span>, <span class="dv">4</span>:<span class="dv">5</span>, <span class="dv">6</span>:<span class="dv">10</span>))
+
+<span class="co"># Lg</span>
+lg_coef &lt;-<span class="st"> </span><span class="kw">Lg</span>(table1, table2)
+lg_table &lt;-<span class="st"> </span><span class="kw">Lg_table</span>(dataset, <span class="dt">sets =</span> <span class="kw">list</span>(<span class="dv">1</span>:<span class="dv">3</span>, <span class="dv">4</span>:<span class="dv">5</span>, <span class="dv">6</span>:<span class="dv">10</span>))</code></pre></div>
+</div>
+<div id="bootstrap-need-change" class="section level3">
+<h3>Bootstrap [NEED CHANGE]</h3>
+<p>This package provides <code>boot_ratio()</code> function to allow users to perform bootstrapping in order to estimate the stability of the compromise factor scores. It generates 1,000 bootstrap samples that give 1,000 estimated bootstrapped factor scores. The function takes <strong>XX</strong> and computes a bootrap ratio, which, like <em>t</em> statistics, can be used to find the observations that reliably contribute to a given component.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">boot_ratio &lt;-<span class="st"> </span><span class="kw">boot_ratio</span>(XX)</code></pre></div>
+</div>
+</div>
+<div id="visualizing" class="section level2">
+<h2>Visualizing</h2>
+<p>This package provides five types of plots. (1) a bar-chart for the eigenvalues, (2) a scatterplot of the common factor scores, (3) a scatterplot of the partial factor scores by block and by observation, (4) a scatterplot of the loadings of given dimensions (i.e., components), and (5) a bar-chart for bootstrap ratios. You can use following functions to create graphics:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot_eigenvalues</span>(mymfa)
+<span class="kw">plot_factor_scores</span>(mymfa)
+<span class="kw">plot_partial_factor_scores</span>(mymfa)
+<span class="kw">plot_variable_loadings</span>(mymfa)
+<span class="kw">plot_boot_ratio</span>(mymfa)</code></pre></div>
+<p>A Shiny App is available for an interactive visualization.</p>
+</div>
 </div>
 
 
