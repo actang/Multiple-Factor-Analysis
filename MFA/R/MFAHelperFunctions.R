@@ -1,3 +1,79 @@
+#' @title Eigenvalues
+#' @description The function summarizes information about the eigenvalues for the mfa objects
+#' @param p represents the mfa object
+#' @return returns a table with the singular values (i.e. square root of eigenvalues), the eigenvalues,
+#' cumulative, percentage of intertia, cumulative percentage of inertia, for all the extracted components
+#' @examples
+#' # default
+#' table <- Eigenvalues(mfa_object)
+#'
+Eigenvalues <- function(p) {
+  #make sure that the parameter p is of class type mfa
+  if(class(p) != "mfa")
+  {
+    stop("Eigenvalues expects the argument to be of class mfaClass")
+  }
+  inertia <- p$EigenValues/sum(p$EigenValues) * 100
+  returnValue <- data.frame()
+  returnValue = rbind(sqrt(p$EigenValues), p$EigenValues, cumsum(p$EigenValues), inertia, cumsum(inertia))
+  rownames(returnValue) <- c("Singular value", "Eigenvalue", "cumulative", "Inertia", "cumulative")
+  colnames(returnValue) <- c("C1", "C2", "C3", "C4", "C5", "C6", "C7", "C8", "C9", "C10", "C11")
+  return(returnValue)
+}
+
+#' @title CtrObserToDimension
+#' @description The function computes the contribution of an observation to a dimension.
+#' @param p represents the mfa object
+#' @return returns the contributions matrix.
+#' @examples
+#' # default
+#' ctr <- CtrObserToDimension(mfa_object)
+#'
+CtrObserToDimension <- function(p) {
+  #make sure that the parameter p is of class type mfa
+  if(class(p) != "mfa")
+  {
+    stop("CtrObserToDimension expects the argument to be of class mfaClass")
+  }
+  return(p$CtrObserToDimension)
+}
+
+#' @title CtrVarToDimension
+#' @description The function computes the contribution of variable to a dimension.
+#' @param p represents the mfa object
+#' @return returns the contributions matrix.
+#' @examples
+#' # default
+#' ctr <- CtrVarToDimension(mfa_object)
+#'
+CtrVarToDimension <- function(p) {
+  #make sure that the parameter p is of class type mfa
+  if(class(p) != "mfa")
+  {
+    stop("CtrVarToDimension expects the argument to be of class mfaClass")
+  }
+  return(p$CtrVarToDimension)
+}
+
+#' @title CtrTableToDimension
+#' @description The function computes the contribution of table to a dimension.
+#' @param p represents the mfa object
+#' @return returns the contributions matrix.
+#' @examples
+#' # default
+#' ctr <- CtrTableToDimension(mfa_object)
+#'
+CtrTableToDimension <- function(p) {
+  #make sure that the parameter p is of class type mfa
+  if(class(p) != "mfa")
+  {
+    stop("CtrTableToDimension expects the argument to be of class mfaClass")
+  }
+  return(p$CtrTableToDimension)
+}
+
+
+
 #' @title RV
 #' @description Computes the RV coefficients to study the Between-Table Structure
 #' @param Xi represents the first table
@@ -40,7 +116,7 @@ Rv_table <- function(data, sets){
 }
 
 
-# Computing Lg table coefficient
+# Computing Lg coefficient
 #' @title Lg
 #' @description Computes the LG coefficients to study the Between-Table Structure
 #' @param Xi represents the first table
@@ -96,13 +172,28 @@ Lg_table <- function(data, sets){
 # Helper function for printing and plotting the mfa object
 #########################################################
 
+#' @title print
+#' @description The print function for printing details about mfa object
+#' @param p represents the mfa object to be printed
+#' @examples
+#' # default
+#' print(mfa_object)
+#'
 print.mfa <- function(p)
 {
   cat('Object of type mfa', "\n")
   print('The number of assessors is',length(p$Sets))
   print('The number of components is',length(p$Eigen))
+  invisible(p)
 }
 
+#' @title plot
+#' @description The plot function for generating plots corresponding to the  mfa object
+#' @param p represents the mfa object to be plotted
+#' @examples
+#' # default
+#' plot(mfa_object)
+#'
 plot.mfa <- function(p) {
   plot_eigenvalues(p)
   plot_factor_scores(p)
@@ -112,47 +203,6 @@ plot.mfa <- function(p) {
   }
 }
 
-Eigenvalues <- function(p) {
-  #make sure that the parameter p is of class type mfa
-  if(class(p) != "mfa")
-  {
-    stop("Eigenvalues expects the argument to be of class mfaClass")
-  }
-  inertia <- p$EigenValues/sum(p$EigenValues) * 100
-  returnValue <- data.frame()
-  ### TODO: The last row needs to be fixed and converted into an integer.
-  returnValue = rbind(sqrt(p$EigenValues), p$EigenValues, cumsum(p$EigenValues), inertia, cumsum(inertia))
-  rownames(returnValue) <- c("Singular value", "Eigenvalue", "cumulative", "Inertia", "cumulative")
-  colnames(returnValue) <- c("C1", "C2", "C3", "C4", "C5", "C6", "C7", "C8", "C9", "C10", "C11")
-  return(returnValue)
-}
-
-CtrObserToDimension <- function(p) {
-  #make sure that the parameter p is of class type mfa
-  if(class(p) != "mfa")
-  {
-    stop("CtrObserToDimension expects the argument to be of class mfaClass")
-  }
-  return(p$CtrObserToDimension)
-}
-
-CtrVarToDimension <- function(p) {
-  #make sure that the parameter p is of class type mfa
-  if(class(p) != "mfa")
-  {
-    stop("CtrVarToDimension expects the argument to be of class mfaClass")
-  }
-  return(p$CtrVarToDimension)
-}
-
-CtrTableToDimension <- function(p) {
-  #make sure that the parameter p is of class type mfa
-  if(class(p) != "mfa")
-  {
-    stop("CtrTableToDimension expects the argument to be of class mfaClass")
-  }
-  return(p$CtrTableToDimension)
-}
 
 
 ##################################################################
@@ -310,6 +360,16 @@ plot_boot_ratio <- function(obj){
 ## Helper functions to check that the arguments passed are correct
 ##################################################################
 
+#' @title checkScaleOrCenter
+#' @description Check if the Scale and Center parameter are of the right type and size
+#' @param param represents the scale or center parameter
+#' @param maxCount represents the maximum value of scale or center
+#' @return TRUE if the parameter is correct and raises an error otherwise
+#' @export
+#' @examples
+#' # default
+#' checkScaleOrCenter(param, maxCount)
+#'
 checkScaleOrCenter <- function(param, maxCount) {
   if(is.vector(param, mode = "numeric") || is.logical(param))
   {
@@ -328,6 +388,15 @@ checkScaleOrCenter <- function(param, maxCount) {
   }
 }
 
+#' @title checkNComponents
+#' @description Check if the number of components parameter is of the right type
+#' @param ncomps represents the scale or center parameter
+#' @return returns TRUE if the parameter is correct and raises an error otherwise
+#' @export
+#' @examples
+#' # default
+#' checkNComponents(ncomps)
+#'
 checkNComponents <- function(ncomps) {
   if(ncomps%%1 == 0)
   {
@@ -340,6 +409,15 @@ checkNComponents <- function(ncomps) {
   }
 }
 
+#' @title checkData
+#' @description Check if the data parameter is of the right type
+#' @param data represents the scale or center parameter
+#' @return returns TRUE if the parameter is correct and raises an error otherwise
+#' @export
+#' @examples
+#' # default
+#' checkData(data)
+#'
 checkData <- function(data)
 {
 
@@ -354,8 +432,17 @@ checkData <- function(data)
 
 }
 
+#' @title checkSets
+#' @description Check if the sets parameter is of the right type
+#' @param sets represents the scale or center parameter
+#' @return returns TRUE if the parameter is correct and raises an error otherwise
+#' @export
+#' @examples
+#' # default
+#' checkSets(sets)
+#'
 checkSets <- function(sets) {
-    if(!is.list(obj$Sets))
+    if(!is.list(sets))
     {
       stop("Sets input must be a list")
     }

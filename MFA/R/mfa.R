@@ -36,6 +36,14 @@ data <- read.csv(url, col.names = col_names)
 
 mfa <- function(data, sets, supplData, ncomps = NULL, center = TRUE, scale = TRUE){
 
+  #check that the input parameters are correct
+  checkSets(sets)
+  checkData(data)
+  checkNComponents(ncomps)
+  checkScaleOrCenter(center, ncol(data))
+  checkScaleOrCenter(scale, ncol(data))
+
+
   Y <- list()
   X <- list()
   G <- list()
@@ -134,8 +142,11 @@ mfa <- function(data, sets, supplData, ncomps = NULL, center = TRUE, scale = TRU
 
   # If ncomps == NULL, all components should be extracted
   if(is.null(ncomps)){
-    ncomps_suppl == length(D_suppl.K)
-  } else {ncomps_suppl == ncomps}
+    ncomps_suppl <- length(D_suppl.K)
+  }
+  else {
+    ncomps_suppl <- ncomps
+  }
 
   # Calculating supplementary loadings
   Q_suppl <- t(X_suppl) %*% M %*% P %*% solve(Del)
@@ -198,9 +209,9 @@ mfa <- function(data, sets, supplData, ncomps = NULL, center = TRUE, scale = TRU
               "BootstrapRatio" = ratio_boot,
               "ncomps" = ncomps,
               "SupplementaryEigenValues" = D_suppl.K,
-              "SupplementaryCompromiseFactorScores" = F_supp,
+              "SupplementaryCompromiseFactorScores" = F_suppl,
               "SupplementaryMatrixLoadings" = Q_suppl_ncomp,
-              "Supplementaryncomps" = suppl_ncomps
+              "Supplementaryncomps" = ncomps_suppl
               )
   class(res) <- "mfa"
   return(res)
