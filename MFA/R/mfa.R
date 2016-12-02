@@ -19,9 +19,20 @@ col_names = c("ID", "1: cat pee", "1: passion fruit", "1: green pepper",
               "pH", "alcohol", "residual sugar")
 data <- read.csv(url, col.names = col_names)
 
-# Computing Rv coefficient
-
-
+#' @title mfa
+#' @description This is the main mfa function that implements all the calculations for performing the Multiple Factor Analysis
+#' @param data This is the input data, which contains only the assessor inputs
+#' @param sets This is the column number list demarcating columns for each assessor
+#' @param supplData This is the list of supplementary data
+#' @param ncomps This is the number of components for the MFA
+#' @param center This is a boolean flag which decides whether to center the data
+#' @param scale This is a boolean flag which decides whether to scale the data
+#' @return res Returns a vector containing all the output information computed by the MFA analysis
+#' @export
+#' @examples
+#' # default
+#' mfa <- function(data, sets, supplData, ncomps = NULL, center = TRUE, scale = TRUE)
+#'
 
 mfa <- function(data, sets, supplData, ncomps = NULL, center = TRUE, scale = TRUE){
 
@@ -43,16 +54,16 @@ mfa <- function(data, sets, supplData, ncomps = NULL, center = TRUE, scale = TRU
     V.K <- SVD$v
     U.K <- SVD$u
 
-    # factor scores
+    # Factor scores
     G[[K]] <- U.K %*% D.K
 
-    # weight matrix A
+    # Weight matrix A
     alpha1[K] <- (SVD$d[1])^(-2)
     a <- na.omit(append(a, rep(alpha1[K], length(sets[[K]]))))
     A <- diag(a)
   }
 
-  # mass matrix M
+  # Mass matrix M
   M <-  diag(rep(1/nrow(data), nrow(data)))
 
 
@@ -67,7 +78,7 @@ mfa <- function(data, sets, supplData, ncomps = NULL, center = TRUE, scale = TRU
   Eigen <- (Singular)^2
   inertia <- Eigen/sum(Eigen) * 100 # percentage
 
-  # pick n components (dimensions) <- need change -- not 1:n but 1: ---
+  # Pick n components (dimensions) <- need change -- not 1:n but 1: ---
   P.n <- P[,1:ncomps]
   Del.n <- Del[1:ncomps, 1:ncomps]
   Q.n <- Q[,1:ncomps]
@@ -163,7 +174,7 @@ mfa <- function(data, sets, supplData, ncomps = NULL, center = TRUE, scale = TRU
 
   ratio_boot <- mean_boot/sd_boot
 
-  # return
+  # Returns
   res <- list("EigenValues" = Eigen,
               "CompromiseFactorScores" = Fscores,
               "PartialFactorScores" = Partial_fs,
@@ -177,3 +188,6 @@ mfa <- function(data, sets, supplData, ncomps = NULL, center = TRUE, scale = TRU
   class(res) <- "mfa"
   return(res)
 }
+
+mfa_out <- mfa(data = data, sets = list(2:7, 8:13, 14:19, 20:24, 25:30, 31:35, 36:39, 40:45, 46:50, 51:54),
+               supplData <- c(55:58), ncomps = 2, center = TRUE, scale = TRUE)
