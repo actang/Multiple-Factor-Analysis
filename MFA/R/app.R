@@ -7,9 +7,6 @@
 #    http://shiny.rstudio.com/
 #
 
-source("mfa.R")
-source("MFAHelperFunctions.R")
-
 library(shiny)
 
 ui <- shinyUI(fluidPage(
@@ -19,11 +16,6 @@ ui <- shinyUI(fluidPage(
 
   sidebarLayout(
     sidebarPanel(
-      sliderInput(inputId = "ncomps",
-                  label = "Number of Components to Analyze",
-                  min = 1,
-                  max = 10,
-                  value = 2),
       checkboxInput(inputId = "center",
                     label = "Center the data before analysis?",
                     value = TRUE),
@@ -39,6 +31,12 @@ ui <- shinyUI(fluidPage(
                     "Variable Loadings" = "variable_loadings",
                     "Bootstrap Ratio" = "boot_ratio"),
                   selected = 1),
+      helpText("Note: nth-Number of Components to Analyze is only useful for bootstrap ratio plot. All other plots will plot first two dimensions on default."),
+      sliderInput(inputId = "ncomps",
+                  label = "nth-Number of Components to Analyze",
+                  min = 1,
+                  max = 10,
+                  value = 2),
       uiOutput("ui1"),
       uiOutput("ui2")
     ),
