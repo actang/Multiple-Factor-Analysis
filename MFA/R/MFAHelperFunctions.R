@@ -40,7 +40,17 @@ Rv_table <- function(data, sets){
 }
 
 
-# Computing Lg coefficient
+# Computing Lg table coefficient
+#' @title Lg
+#' @description Computes the LG coefficients to study the Between-Table Structure
+#' @param Xi represents the first table
+#' @param Xj represents the second table
+#' @return Lg coefficient for Xi and Xj
+#' @export
+#' @examples
+#' # default
+#' lg_coef <- Lg(table1, table2)
+#'
 
 Lg <- function(Xi,Xj){
   alpha1 <- NA
@@ -52,7 +62,18 @@ Lg <- function(Xi,Xj){
   return(Lg)
 }
 
+
 # Computing Lg table coefficient
+#' @title Lg_table
+#' @description Computes the LG coefficients to study the Between-Table Structure
+#' @param data represents the data-set that contains all the tables
+#' @param sets represents the list of vector used to identify the tables
+#' @return LG coefficient for the data-set
+#' @export
+#' @examples
+#' # default
+#' lg_coef <- Lg(dataset, sets = list(1:3, 4:5, 6:10))
+#'
 
 Lg_table <- function(data, sets){
   X <- list()
@@ -237,9 +258,9 @@ plot_variable_loadings <- function(obj, accessor_number=0){
 plot_boot_ratio <- function(obj){
   for(i in 1:obj$ncomps){
     ylim <- c(-1.1 * max(obj$BootstrapRatio[,i]), 1.1 * max(obj$BootstrapRatio[,i]))
-    plot <- barplot(obj$BootstrapRatio[,i], main = "Bootstrap Ratios", ylim = ylim)
+    plot <- barplot(obj$BootstrapRatio[,i], main = "Bootstrap Ratios", ylim = ylim, col = ifelse(abs(obj$BootstrapRatio[,i]) < 3, 'gray',ifelse(obj$BootstrapRatio[,i]< 0,'green','blue')))
     text(x = plot, y = obj$BootstrapRatio[,i],
-       label = round(obj$BootstrapRatio[,i], digit=2), col = "red", cex = 0.8)
+       label = round(obj$BootstrapRatio[,i], digit=2), col = ifelse(abs(obj$BootstrapRatio[,i]) < 3, 'gray',ifelse(obj$BootstrapRatio[,i]< 0,'green','blue')), cex = 0.8, pos = ifelse(obj$BootstrapRatio[,i]< 0, 1, 3), offset = 0.2)
   }
 }
 
