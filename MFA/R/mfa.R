@@ -19,9 +19,20 @@ col_names = c("ID", "1: cat pee", "1: passion fruit", "1: green pepper",
               "pH", "alcohol", "residual sugar")
 data <- read.csv(url, col.names = col_names)
 
-# Computing Rv coefficient
-
-
+#' @title mfa
+#' @description This is the main mfa function that implements all the calculations for performing the Multiple Factor Analysis
+#' @param data This is the input data, which contains only the assessor inputs
+#' @param sets This is the column number list demarcating columns for each assessor
+#' @param supplData This is the list of supplementary data
+#' @param ncomps This is the number of components for the MFA
+#' @param center This is a boolean flag which decides whether to center the data
+#' @param scale This is a boolean flag which decides whether to scale the data
+#' @return res Returns a list containing all the output information computed by the MFA analysis
+#' @export
+#' @examples
+#' # default
+#' mfa <- function(data, sets, supplData, ncomps = NULL, center = TRUE, scale = TRUE)
+#'
 
 mfa <- function(data, sets, supplData, ncomps = NULL, center = TRUE, scale = TRUE){
 
@@ -43,16 +54,16 @@ mfa <- function(data, sets, supplData, ncomps = NULL, center = TRUE, scale = TRU
     V.K <- SVD$v
     U.K <- SVD$u
 
-    # factor scores
+    # Factor scores
     G[[K]] <- U.K %*% D.K
 
-    # weight matrix A
+    # Weight matrix A
     alpha1[K] <- (SVD$d[1])^(-2)
     a <- na.omit(append(a, rep(alpha1[K], length(sets[[K]]))))
     A <- diag(a)
   }
 
-  # mass matrix M
+  # Mass matrix M
   M <-  diag(rep(1/nrow(data), nrow(data)))
 
 
@@ -67,7 +78,12 @@ mfa <- function(data, sets, supplData, ncomps = NULL, center = TRUE, scale = TRU
   Eigen <- (Singular)^2
   inertia <- Eigen/sum(Eigen) * 100 # percentage
 
-  # pick n components (dimensions) <- need change -- not 1:n but 1: ---
+  # If ncomps == NULL, all components should be extracted
+  if(is.null(ncomps)){
+    ncomps == length(Eigen)
+  }
+
+  # Pick n components (dimensions)
   P.n <- P[,1:ncomps]
   Del.n <- Del[1:ncomps, 1:ncomps]
   Q.n <- Q[,1:ncomps]
@@ -105,7 +121,7 @@ mfa <- function(data, sets, supplData, ncomps = NULL, center = TRUE, scale = TRU
   }
 
   # Calculating the partial inertia
-  partial_inertia <- matrix(nrow = length(sets),ncol = ncomps)
+  partial_inertia <- matrix(nrow = length(sets), ncol = ncomps)
   for(i in 1:ncomps){
     partial_inertia[,i] <- cntr_tbl[,i]*Eigen[i]
   }
@@ -116,9 +132,14 @@ mfa <- function(data, sets, supplData, ncomps = NULL, center = TRUE, scale = TRU
   D_suppl.K <- diag(SVD_suppl$d)
   X_suppl <- Y_suppl/D_suppl.K[1,1]
 
+  # If ncomps == NULL, all components should be extracted
+  if(is.null(ncomps)){
+    ncomps_suppl == length(D_suppl.K)
+  } else {ncomps_suppl == ncomps}
+
   # Calculating supplementary loadings
   Q_suppl <- t(X_suppl) %*% M %*% P %*% solve(Del)
-  Q_suppl_ncomp <- Q_suppl[,1:ncomps]
+  Q_suppl_ncomp <- Q_suppl[,1:ncomps_suppl]
 
   # Computing supplementary factor scores
 
@@ -163,7 +184,7 @@ mfa <- function(data, sets, supplData, ncomps = NULL, center = TRUE, scale = TRU
 
   ratio_boot <- mean_boot/sd_boot
 
-  # return
+  # Returns
   res <- list("EigenValues" = Eigen,
               "CompromiseFactorScores" = Fscores,
               "PartialFactorScores" = Partial_fs,
@@ -173,7 +194,17 @@ mfa <- function(data, sets, supplData, ncomps = NULL, center = TRUE, scale = TRU
               "CtrTableToDimension" = cntr_tbl,
               "Labels" = labels,
               "ColumnNames" = colnames(data),
-              "Sets" = sets)
+              "Sets" = sets,
+              "BootstrapRatio" = ratio_boot,
+              "ncomps" = ncomps,
+              "SupplementaryEigenValues" = D_suppl.K,
+              "SupplementaryCompromiseFactorScores" = F_supp,
+              "SupplementaryMatrixLoadings" = Q_suppl_ncomp,
+              "Supplementaryncomps" = suppl_ncomps
+              )
   class(res) <- "mfa"
   return(res)
 }
+
+mfa_out <- mfa(data = data, sets = list(2:7, 8:13, 14:19, 20:24, 25:30, 31:35, 36:39, 40:45, 46:50, 51:54),
+               supplData <- c(55:58), ncomps = 2, center = TRUE, scale = TRUE)

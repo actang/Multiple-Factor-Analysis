@@ -1,8 +1,3 @@
-#############################################################################################
-## Related Methods and Functions
-#############################################################################################
-
-
 #' @title RV
 #' @description Computes the RV coefficients to study the Between-Table Structure
 #' @param Xi represents the first table
@@ -20,7 +15,7 @@ RV <- function(Xi,Xj){
   return(Rv)
 }
 
-#' @title RV_table
+#' @title Rv_table
 #' @description Computes the RV coefficients to study the Between-Table Structure
 #' @param data represents the data-set that contains all the tables
 #' @param sets represents the list of vector used to identify the tables
@@ -30,7 +25,7 @@ RV <- function(Xi,Xj){
 #' # default
 #' rv_coef <- RV_table(dataset, sets = list(1:3, 4:5, 6:10))
 #'
-RV_table <- function(data, sets){
+Rv_table <- function(data, sets){
   Rv <- matrix(0,nrow = length(sets),ncol = length(sets))
   tempK <- as.matrix(data[ ,sets[[K]]])
   X[[K]] <- tempK
@@ -45,8 +40,9 @@ RV_table <- function(data, sets){
 }
 
 
+# Computing Lg table coefficient
 #' @title Lg
-#' @description Computes the Lg coefficients to study the Between-Table Structure
+#' @description Computes the LG coefficients to study the Between-Table Structure
 #' @param Xi represents the first table
 #' @param Xj represents the second table
 #' @return Lg coefficient for Xi and Xj
@@ -66,16 +62,19 @@ Lg <- function(Xi,Xj){
   return(Lg)
 }
 
+
+# Computing Lg table coefficient
 #' @title Lg_table
-#' @description Computes the RV coefficients to study the Between-Table Structure
+#' @description Computes the LG coefficients to study the Between-Table Structure
 #' @param data represents the data-set that contains all the tables
 #' @param sets represents the list of vector used to identify the tables
-#' @return Lg coefficient for the data-set
+#' @return LG coefficient for the data-set
 #' @export
 #' @examples
 #' # default
-#' lg_coef <- Lg_table(dataset, sets = list(1:3, 4:5, 6:10))
+#' lg_coef <- Lg(dataset, sets = list(1:3, 4:5, 6:10))
 #'
+
 Lg_table <- function(data, sets){
   X <- list()
   alpha1 <- NA
@@ -90,6 +89,27 @@ Lg_table <- function(data, sets){
     }
   }
   return(Lg)
+}
+
+
+##########################################################
+# Helper function for printing and plotting the mfa object
+#########################################################
+
+print.mfa <- function(p)
+{
+  cat('Object of type mfa', "\n")
+  print('The number of assessors is',length(p$Sets))
+  print('The number of components is',length(p$Eigen))
+}
+
+plot.mfa <- function(p) {
+  plot_eigenvalues(p)
+  plot_factor_scores(p)
+  plot_partial_factor_scores(p)
+  for (i in 1:length(obj$"Partial factor scores by assessor")){
+    plot_variable_loadings(p, i)
+  }
 }
 
 Eigenvalues <- function(p) {
@@ -134,27 +154,18 @@ CtrTableToDimension <- function(p) {
   return(p$CtrTableToDimension)
 }
 
-##########################################################
-# Helper function for printing and plotting the mfa object
-#########################################################
 
-print.mfa <- function(p, ...)
-{
-  cat('Object of type mfa', "\n")
-  cat('add some more information here')
-  invisible(p)
-}
-
-plot.mfa <- function(p) {
-  plot_eigenvalues(p)
-  plot_factor_scores(p)
-  plot_partial_factor_scores(p)
-  for (i in 1:length(obj$"Partial factor scores by assessor")){
-    plot_variable_loadings(p, i)
-  }
-}
-
-
+##################################################################
+## Plot functions
+##################################################################
+#' @title plot_eigenvalues
+#' @description Plot the eigenvalues of the MFA construction
+#' @param obj Output returned from the MFA class construction
+#' @export
+#' @examples
+#' # default
+#' plot_eigenvalues(obj)
+#'
 plot_eigenvalues <- function(obj){
   ylim <- c(0, 1.1 * max(obj$EigenValues))
   plot <- barplot(obj$EigenValues, main = "Eigenvalues", ylim = ylim)
@@ -162,6 +173,14 @@ plot_eigenvalues <- function(obj){
        label = round(obj$EigenValues, digit=2), col = "red", cex = 0.8)
 }
 
+#' @title plot_factor_scores
+#' @description Plot the factor scores of the MFA construction
+#' @param obj Output returned from the MFA class construction
+#' @export
+#' @examples
+#' # default
+#' plot_factor_scores(obj)
+#'
 plot_factor_scores <- function(obj){
   ncomps = ncol(obj$CompromiseFactorScores)
   if (ncomps >= 2) {
@@ -178,6 +197,16 @@ plot_factor_scores <- function(obj){
   }
 }
 
+#' @title plot_partial_factor_scores
+#' @description Plot the partial factor scores of the MFA construction
+#' @param obj Output returned from the MFA class construction
+#' @param accessor_numer Plot a given accessor by its index number (default: all accessors)
+#' @param wine_number Plot a given wine number by its index number (default: all wines)
+#' @export
+#' @examples
+#' # default
+#' plot_partial_factor_scores(obj)
+#'
 plot_partial_factor_scores <- function(obj, accessor_number=0, wine_number=0){
   plot_factor_scores(obj)
   partial_scores = obj$PartialFactorScores
@@ -225,6 +254,15 @@ plot_partial_factor_scores <- function(obj, accessor_number=0, wine_number=0){
   }
 }
 
+#' @title plot_variable_loadings
+#' @description Plot the variable loadings of the MFA construction
+#' @param obj Output returned from the MFA class construction
+#' @param accessor_numer Plot a given accessor by its index number (default: all accessors)
+#' @export
+#' @examples
+#' # default
+#' plot_variable_loadings(obj)
+#'
 plot_variable_loadings <- function(obj, accessor_number=0){
   partial_scores = obj$PartialFactorScores
   loadings = obj$MatrixLoadings
@@ -248,6 +286,23 @@ plot_variable_loadings <- function(obj, accessor_number=0){
     text(loadings[obj$Sets[[accessor_number]]-1, ], as.vector((obj$"ColumnNames")[obj$Sets[[accessor_number]]-1]),
          pos=3, col = "blue", cex=0.5)
     title(sub=paste("with Partial Factor Scores of accessor ", accessor_number))
+  }
+}
+
+#' @title plot_boot_ratio
+#' @description Plot the bootstrap ratio of the MFA construction
+#' @param obj Output returned from the MFA class construction
+#' @export
+#' @examples
+#' # default
+#' plot_boot_ratio(obj)
+#'
+plot_boot_ratio <- function(obj){
+  for(i in 1:obj$ncomps){
+    ylim <- c(-1.1 * max(obj$BootstrapRatio[,i]), 1.1 * max(obj$BootstrapRatio[,i]))
+    plot <- barplot(obj$BootstrapRatio[,i], main = "Bootstrap Ratios", ylim = ylim, col = ifelse(abs(obj$BootstrapRatio[,i]) < 3, 'gray',ifelse(obj$BootstrapRatio[,i]< 0,'green','blue')))
+    text(x = plot, y = obj$BootstrapRatio[,i],
+       label = round(obj$BootstrapRatio[,i], digit=2), col = ifelse(abs(obj$BootstrapRatio[,i]) < 3, 'gray',ifelse(obj$BootstrapRatio[,i]< 0,'green','blue')), cex = 0.8, pos = ifelse(obj$BootstrapRatio[,i]< 0, 1, 3), offset = 0.2)
   }
 }
 
