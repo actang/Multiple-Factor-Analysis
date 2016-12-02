@@ -250,7 +250,7 @@ plot_factor_scores <- function(obj){
 #' @title plot_partial_factor_scores
 #' @description Plot the partial factor scores of the MFA construction
 #' @param obj Output returned from the MFA class construction
-#' @param accessor_numer Plot a given accessor by its index number (default: all accessors)
+#' @param accessor_number Plot a given accessor by its index number (default: all accessors)
 #' @param wine_number Plot a given wine number by its index number (default: all wines)
 #' @export
 #' @examples
@@ -307,7 +307,7 @@ plot_partial_factor_scores <- function(obj, accessor_number=0, wine_number=0){
 #' @title plot_variable_loadings
 #' @description Plot the variable loadings of the MFA construction
 #' @param obj Output returned from the MFA class construction
-#' @param accessor_numer Plot a given accessor by its index number (default: all accessors)
+#' @param accessor_number Plot a given accessor by its index number (default: all accessors)
 #' @export
 #' @examples
 #' # default
