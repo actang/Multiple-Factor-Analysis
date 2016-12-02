@@ -1,7 +1,7 @@
 #install.packages("MFAg")
 library("MFAg")
 library("boot")
-#library("psych")
+library("psych")
 url <- "https://raw.githubusercontent.com/ucb-stat243/stat243-fall-2016/master/problem-sets/final-project/data/wines.csv"
 col_names = c("ID", "1: cat pee", "1: passion fruit", "1: green pepper",
               "1: mineral", "1: smoky", "1: citrus", "2: cat pee", "2: passion fruit",

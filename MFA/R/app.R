@@ -86,7 +86,7 @@ server <- shinyServer(function(input, output) {
       sets = list(2:7, 8:13, 14:19, 20:24, 25:30, 31:35,
                   36:39, 40:45, 46:50, 51:54),
       supplData <- c(55:58),
-      ncomps = input$ncomps,
+      ncomps = max(2,input$ncomps),
       center = input$center,
       scale = input$scale)
 
@@ -112,7 +112,7 @@ server <- shinyServer(function(input, output) {
         }
         plot_variable_loadings(result, accessor_number)
       },
-      "boot_ratio" = plot_boot_ratio(result)
+      "boot_ratio" = plot_boot_ratio(result,input$ncomps)
     )
   })
 

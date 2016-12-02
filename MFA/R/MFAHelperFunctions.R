@@ -85,6 +85,8 @@ CtrTableToDimension <- function(p) {
 #' rv_coef <- RV(table1, table2)
 #'
 RV <- function(Xi,Xj){
+  Xi <- as.matrix(Xi)
+  Xj <- as.matrix(Xj)
   numerator <- (tr((Xi%*%t(Xi) * Xj%*%t(Xj))))
   denominator <- (sqrt((tr((Xi%*%t(Xi) * Xi%*%t(Xi))))*(tr((Xj%*%t(Xj) * Xj%*%t(Xj))))))
   Rv <- numerator/denominator
@@ -129,6 +131,8 @@ Rv_table <- function(data, sets){
 #'
 
 Lg <- function(Xi,Xj){
+  Xi <- as.matrix(Xi)
+  Xj <- as.matrix(Xj)
   alpha1 <- NA
   SVDi <- svd(Xi)
   SVDj <- svd(Xj)
@@ -182,8 +186,8 @@ Lg_table <- function(data, sets){
 print.mfa <- function(p)
 {
   cat('Object of type mfa', "\n")
-  print('The number of assessors is',length(p$Sets))
-  print('The number of components is',length(p$Eigen))
+  cat('The number of assessors is',length(p$Sets),"\n")
+  cat('The number of components is',length(p$Eigen))
   invisible(p)
 }
 
@@ -198,7 +202,7 @@ plot.mfa <- function(p) {
   plot_eigenvalues(p)
   plot_factor_scores(p)
   plot_partial_factor_scores(p)
-  for (i in 1:length(obj$"Partial factor scores by assessor")){
+  for (i in 1:length(p$PartialFactorScores)){
     plot_variable_loadings(p, i)
   }
 }
@@ -347,8 +351,8 @@ plot_variable_loadings <- function(obj, accessor_number=0){
 #' # default
 #' plot_boot_ratio(obj)
 #'
-plot_boot_ratio <- function(obj){
-  for(i in 1:obj$ncomps){
+plot_boot_ratio <- function(obj, ncomps){
+  for(i in 1:ncomps){
     ylim <- c(-1.1 * max(obj$BootstrapRatio[,i]), 1.1 * max(obj$BootstrapRatio[,i]))
     plot <- barplot(obj$BootstrapRatio[,i], main = "Bootstrap Ratios", ylim = ylim, col = ifelse(abs(obj$BootstrapRatio[,i]) < 3, 'gray',ifelse(obj$BootstrapRatio[,i]< 0,'green','blue')))
     text(x = plot, y = obj$BootstrapRatio[,i],
