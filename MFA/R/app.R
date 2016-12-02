@@ -35,12 +35,8 @@ ui <- shinyUI(fluidPage(
                     "Partial Factor Scores" = "partial_factor_scores",
                     "Variable Loadings" = "variable_loadings"),
                   selected = 1),
-      textInput(inputId = "wine_number",
-                label = "Optional: Input Item Numbers [1, 12]",
-                value = ""),
-      textInput(inputId = "accessor_number",
-                label = "Optional: Input Accessor Numbers [1, 10]",
-                value = "")
+      uiOutput("ui1"),
+      uiOutput("ui2")
     ),
 
     mainPanel(
@@ -56,7 +52,28 @@ source("mfa.R")
 source("MFAHelperFunctions.R")
 
 server <- shinyServer(function(input, output) {
+  output$ui1 <- renderUI({
+    if (is.null(input$plot_type))
+      return()
+    switch(input$plot_type,
+           "partial_factor_scores" = textInput(inputId = "accessor_number",
+                                               label = "Input Accessor Numbers [1, 10]",
+                                               value = ""),
+           "variable_loadings" = textInput(inputId = "accessor_number",
+                                           label = "Input Accessor Numbers [1, 10]",
+                                           value = "")
+    )
+  })
 
+  output$ui2 <- renderUI({
+    if (is.null(input$plot_type))
+      return()
+    switch(input$plot_type,
+           "partial_factor_scores" = textInput(inputId = "wine_number",
+                                               label = "Input Item Numbers [1, 12]",
+                                               value = "")
+    )
+  })
   output$plot <- renderPlot({
     url <- "https://raw.githubusercontent.com/ucb-stat243/stat243-fall-2016/master/problem-sets/final-project/data/wines.csv"
     col_names = c("ID", "1: cat pee", "1: passion fruit", "1: green pepper",
@@ -83,21 +100,28 @@ server <- shinyServer(function(input, output) {
       center = input$center,
       scale = input$scale)
 
-    wine_number = as.integer(input$wine_number)
-    if (is.na(wine_number) || wine_number > 12) {
-      wine_number = 0
-    }
-    accessor_number = as.integer(input$accessor_number)
-    if (is.na(accessor_number) || accessor_number > 10) {
-      accessor_number = 0
-    }
-
     switch(
       input$plot_type,
       "eigenvalues" = plot_eigenvalues(result),
       "factor_scores" = plot_factor_scores(result),
-      "partial_factor_scores" = plot_partial_factor_scores(result, accessor_number, wine_number),
-      "variable_loadings" = plot_variable_loadings(result, accessor_number)
+      "partial_factor_scores" = {
+        wine_number = as.numeric(input$wine_number)
+        accessor_number = as.numeric(input$accessor_number)
+        if (all(is.na(wine_number)) || wine_number > 12) {
+          wine_number = 0
+        }
+        if (all(is.na(accessor_number)) || accessor_number > 10) {
+          accessor_number = 0
+        }
+        plot_partial_factor_scores(result, accessor_number, wine_number)
+      },
+      "variable_loadings" = {
+        accessor_number = as.numeric(input$accessor_number)
+        if (is.na(accessor_number) || accessor_number > 10) {
+          accessor_number = 0
+        }
+        plot_variable_loadings(result, accessor_number)
+      }
     )
   })
 
