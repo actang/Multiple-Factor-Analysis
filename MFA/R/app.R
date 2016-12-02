@@ -7,6 +7,9 @@
 #    http://shiny.rstudio.com/
 #
 
+source("mfa.R")
+source("MFAHelperFunctions.R")
+
 library(shiny)
 
 ui <- shinyUI(fluidPage(
