@@ -64,6 +64,12 @@ The function returns a list containing all the output information computed by th
 
 ## Complementary Functions: 
 
+### Print basic information about mfa object
+The package provides a print method to display basic information about mfa object: the numbers of blocks and components. 
+```{r, eval = FALSE}
+print(mymfa)
+```
+
 ### Summaries of eigenvalues 
 This package provides the summaries of eigenvalues that include each component's singular values, eigenvalues, cumulative eigenvalues, \% inertia, and cumulative \% inertia.   
 ```{r, eval = FALSE}
