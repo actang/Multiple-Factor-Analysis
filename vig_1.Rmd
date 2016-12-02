@@ -14,30 +14,55 @@ knitr::opts_chunk$set(collapse = T, comment = "#>")
 library(mfa)
 ```
 
-## Multi-Factor Analysis
+# Multi-Factor Analysis
 
-The package `"mfa"` implements a statistical multivariate technique called Multiple Factor Analysis (MFA) and visualizes the compromise of the tables, partial factor scores, and variable loadings of given dimensions (i.e., components). Additionally, this package provides a set of complementary functions and methods for: (1) summaries of eigenvalues, (2) contributions (by observations, variables, and tables, respectively), (3) $R_V$ and $L_g$ coefficients, and (4) bootstrapping. 
+The package `"mfa"` implements a statistical multivariate technique called Multiple Factor Analysis (MFA). In addition to the main `mfa` function, it provides a set of complementary functions and methods to compute summaries of eigenvalues, contributions, coefficients to study the between-table structure (both $R_V$ and $L_g$), and bootstrapping to estimate the stability of the compromise factor scores. 
 
-## Creating a `mfa`
+
+For visualization, it includes functions for five types of plots: (1) a bar-chart for the eigenvalues, (2) a scatterplot of the common factor scores, (3) a scatterplot of the partial factor scores by block and by observation, (4) a scatterplot of the loadings of given dimensions (i.e., components), and (5) a bar-chart for bootstrap ratios. A Shiny App is available for an interactive visualization.  
+
+
+## Main Function: Creating a `mfa`
 
 The first step is to create a `"mfa"` object with the function `mfa()`:
 
 ```{r}
-mymfa <- mfa()
+mymfa <- function(data, sets, supplData, ncomps = NULL, center = TRUE, scale = TRUE)
 mymfa
 ```
 
-By default, `mfa()` creates an object with pre-processed matrix by centering and normalizing each column such that its mean is equal to 0 and the sum of the square values of all its elements is equal to 1. You can change the defaults with arguments `center` and `scale`:
+This is the main mfa function that implements all the calculations for performing the Multiple Factor Analysis. The function takes six arguments:
 
-```{r}
+- `data`: the input data, which contains only the assessor inputs,
+- `sets`: the column number list demarcating columns for each assessor,
+- `supplData`: the list of supplementary data for an additional factor analysis,
+- `ncomps`: the number of components for the MFA,
+- `center`: a boolean flag which decides whether to center the data,
+- `scale`: a boolean flag which decides whether to scale the data.
+
+
+By default, `ncomps = NULL` indicate that all possible components should be extracted. But the user can specify a number (e.g., `ncomps = 2`). Also by default, `mfa()` creates an object with pre-processed matrix by centering and normalizing each column such that its mean is equal to 0 and the sum of the square values of all its elements is equal to 1. You can change the defaults with arguments `center` and `scale`:
+
+```{r, eval = FALSE}
 not_centered <- mfa(..., center = FALSE)
 not_normalized <- mfa(..., scale = FALSE)
 ```
 
+
+The function returns a list containing all the output information computed by the MFA analysis. It includes 
+
+* Output of the main analysis: the eigenvalues, compromise factor scroes, matrix loadings, and contributions (by observation, variable, and table);
+* Additional information: labels, column names of the data, sets, bootstrap ratios, and the number of components; 
+* Output of the supplementary analysis: eigenvalues, compromise factor scores, matrix loadings, and the number of components. 
+
+
+## Complementary Functions: 
+
+
 ## Visualizing 
 
 You can use the function `plot()` to create a graphic with
-```{r, fig.show='hold'}
+```{r, eval = FALSE, fig.show='hold'}
 plot(mymfa)
 ```
 
