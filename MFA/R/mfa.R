@@ -184,7 +184,9 @@ mfa <- function(data, sets, supplData, ncomps = NULL, center = TRUE, scale = TRU
               "CtrTableToDimension" = cntr_tbl,
               "Labels" = labels,
               "ColumnNames" = colnames(data),
-              "Sets" = sets)
+              "Sets" = sets,
+              "BootstrapRatio" = ratio_boot,
+              "ncomps" = ncomps)
   class(res) <- "mfa"
   return(res)
 }

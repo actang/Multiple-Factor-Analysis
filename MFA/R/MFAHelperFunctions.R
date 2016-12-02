@@ -75,11 +75,11 @@ Lg_table <- function(data, sets){
 # Helper function for printing and plotting the mfa object
 #########################################################
 
-print.mfa <- function(p, ...)
+print.mfa <- function(p)
 {
   cat('Object of type mfa', "\n")
-  cat('add some more information here')
-  invisible(p)
+  print('The number of assessors is',length(p$Sets))
+  print('The number of components is',length(p$Eigen))
 }
 
 plot.mfa <- function(p) {
@@ -231,6 +231,15 @@ plot_variable_loadings <- function(obj, accessor_number=0){
     text(loadings[obj$Sets[[accessor_number]]-1, ], as.vector((obj$"ColumnNames")[obj$Sets[[accessor_number]]-1]),
          pos=3, col = "blue", cex=0.5)
     title(sub=paste("with Partial Factor Scores of accessor ", accessor_number))
+  }
+}
+
+plot_boot_ratio <- function(obj){
+  for(i in 1:obj$ncomps){
+    ylim <- c(-1.1 * max(obj$BootstrapRatio[,i]), 1.1 * max(obj$BootstrapRatio[,i]))
+    plot <- barplot(obj$BootstrapRatio[,i], main = "Bootstrap Ratios", ylim = ylim)
+    text(x = plot, y = obj$BootstrapRatio[,i],
+       label = round(obj$BootstrapRatio[,i], digit=2), col = "red", cex = 0.8)
   }
 }
 
