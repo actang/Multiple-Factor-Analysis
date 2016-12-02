@@ -1,3 +1,8 @@
+#############################################################################################
+## Related Methods and Functions
+#############################################################################################
+
+
 #' @title RV
 #' @description Computes the RV coefficients to study the Between-Table Structure
 #' @param Xi represents the first table
@@ -15,7 +20,7 @@ RV <- function(Xi,Xj){
   return(Rv)
 }
 
-#' @title Rv_table
+#' @title RV_table
 #' @description Computes the RV coefficients to study the Between-Table Structure
 #' @param data represents the data-set that contains all the tables
 #' @param sets represents the list of vector used to identify the tables
@@ -25,7 +30,7 @@ RV <- function(Xi,Xj){
 #' # default
 #' rv_coef <- RV_table(dataset, sets = list(1:3, 4:5, 6:10))
 #'
-Rv_table <- function(data, sets){
+RV_table <- function(data, sets){
   Rv <- matrix(0,nrow = length(sets),ncol = length(sets))
   tempK <- as.matrix(data[ ,sets[[K]]])
   X[[K]] <- tempK
@@ -40,7 +45,16 @@ Rv_table <- function(data, sets){
 }
 
 
-# Computing Lg coefficient
+#' @title Lg
+#' @description Computes the Lg coefficients to study the Between-Table Structure
+#' @param Xi represents the first table
+#' @param Xj represents the second table
+#' @return Lg coefficient for Xi and Xj
+#' @export
+#' @examples
+#' # default
+#' lg_coef <- Lg(table1, table2)
+#'
 
 Lg <- function(Xi,Xj){
   alpha1 <- NA
@@ -52,8 +66,16 @@ Lg <- function(Xi,Xj){
   return(Lg)
 }
 
-# Computing Lg table coefficient
-
+#' @title Lg_table
+#' @description Computes the RV coefficients to study the Between-Table Structure
+#' @param data represents the data-set that contains all the tables
+#' @param sets represents the list of vector used to identify the tables
+#' @return Lg coefficient for the data-set
+#' @export
+#' @examples
+#' # default
+#' lg_coef <- Lg_table(dataset, sets = list(1:3, 4:5, 6:10))
+#'
 Lg_table <- function(data, sets){
   X <- list()
   alpha1 <- NA
@@ -68,27 +90,6 @@ Lg_table <- function(data, sets){
     }
   }
   return(Lg)
-}
-
-
-##########################################################
-# Helper function for printing and plotting the mfa object
-#########################################################
-
-print.mfa <- function(p, ...)
-{
-  cat('Object of type mfa', "\n")
-  cat('add some more information here')
-  invisible(p)
-}
-
-plot.mfa <- function(p) {
-  plot_eigenvalues(p)
-  plot_factor_scores(p)
-  plot_partial_factor_scores(p)
-  for (i in 1:length(obj$"Partial factor scores by assessor")){
-    plot_variable_loadings(p, i)
-  }
 }
 
 Eigenvalues <- function(p) {
@@ -133,10 +134,26 @@ CtrTableToDimension <- function(p) {
   return(p$CtrTableToDimension)
 }
 
+##########################################################
+# Helper function for printing and plotting the mfa object
+#########################################################
 
-##################################################################
-## Plot functions
-##################################################################
+print.mfa <- function(p, ...)
+{
+  cat('Object of type mfa', "\n")
+  cat('add some more information here')
+  invisible(p)
+}
+
+plot.mfa <- function(p) {
+  plot_eigenvalues(p)
+  plot_factor_scores(p)
+  plot_partial_factor_scores(p)
+  for (i in 1:length(obj$"Partial factor scores by assessor")){
+    plot_variable_loadings(p, i)
+  }
+}
+
 
 plot_eigenvalues <- function(obj){
   ylim <- c(0, 1.1 * max(obj$EigenValues))
