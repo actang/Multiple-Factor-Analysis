@@ -1,3 +1,13 @@
+#' @title RV
+#' @description Computes the RV coefficients to study the Between-Table Structure
+#' @param Xi represents the first table
+#' @param Xj represents the second table
+#' @return RV coefficient for Xi and Xj
+#' @export
+#' @examples
+#' # default
+#' rv_coef <- RV(table1, table2)
+#'
 RV <- function(Xi,Xj){
   numerator <- (tr((Xi%*%t(Xi) * Xj%*%t(Xj))))
   denominator <- (sqrt((tr((Xi%*%t(Xi) * Xi%*%t(Xi))))*(tr((Xj%*%t(Xj) * Xj%*%t(Xj))))))
@@ -5,8 +15,16 @@ RV <- function(Xi,Xj){
   return(Rv)
 }
 
-# Computing Rv table coefficient
-
+#' @title Rv_table
+#' @description Computes the RV coefficients to study the Between-Table Structure
+#' @param data represents the data-set that contains all the tables
+#' @param sets represents the list of vector used to identify the tables
+#' @return RV coefficient for the data-set
+#' @export
+#' @examples
+#' # default
+#' rv_coef <- RV_table(dataset, sets = list(1:3, 4:5, 6:10))
+#'
 Rv_table <- function(data, sets){
   Rv <- matrix(0,nrow = length(sets),ncol = length(sets))
   tempK <- as.matrix(data[ ,sets[[K]]])
@@ -57,11 +75,11 @@ Lg_table <- function(data, sets){
 # Helper function for printing and plotting the mfa object
 #########################################################
 
-print.mfa <- function(p, ...)
+print.mfa <- function(p)
 {
   cat('Object of type mfa', "\n")
-  cat('add some more information here')
-  invisible(p)
+  print('The number of assessors is',length(p$Sets))
+  print('The number of components is',length(p$Eigen))
 }
 
 plot.mfa <- function(p) {
@@ -213,6 +231,15 @@ plot_variable_loadings <- function(obj, accessor_number=0){
     text(loadings[obj$Sets[[accessor_number]]-1, ], as.vector((obj$"ColumnNames")[obj$Sets[[accessor_number]]-1]),
          pos=3, col = "blue", cex=0.5)
     title(sub=paste("with Partial Factor Scores of accessor ", accessor_number))
+  }
+}
+
+plot_boot_ratio <- function(obj){
+  for(i in 1:obj$ncomps){
+    ylim <- c(-1.1 * max(obj$BootstrapRatio[,i]), 1.1 * max(obj$BootstrapRatio[,i]))
+    plot <- barplot(obj$BootstrapRatio[,i], main = "Bootstrap Ratios", ylim = ylim)
+    text(x = plot, y = obj$BootstrapRatio[,i],
+       label = round(obj$BootstrapRatio[,i], digit=2), col = "red", cex = 0.8)
   }
 }
 
