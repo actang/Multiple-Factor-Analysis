@@ -158,7 +158,14 @@ CtrTableToDimension <- function(p) {
 ##################################################################
 ## Plot functions
 ##################################################################
-
+#' @title plot_eigenvalues
+#' @description Plot the eigenvalues of the MFA construction
+#' @param obj Output returned from the MFA class construction
+#' @export
+#' @examples
+#' # default
+#' plot_eigenvalues(obj)
+#'
 plot_eigenvalues <- function(obj){
   ylim <- c(0, 1.1 * max(obj$EigenValues))
   plot <- barplot(obj$EigenValues, main = "Eigenvalues", ylim = ylim)
@@ -166,6 +173,14 @@ plot_eigenvalues <- function(obj){
        label = round(obj$EigenValues, digit=2), col = "red", cex = 0.8)
 }
 
+#' @title plot_factor_scores
+#' @description Plot the factor scores of the MFA construction
+#' @param obj Output returned from the MFA class construction
+#' @export
+#' @examples
+#' # default
+#' plot_factor_scores(obj)
+#'
 plot_factor_scores <- function(obj){
   ncomps = ncol(obj$CompromiseFactorScores)
   if (ncomps >= 2) {
@@ -182,6 +197,16 @@ plot_factor_scores <- function(obj){
   }
 }
 
+#' @title plot_partial_factor_scores
+#' @description Plot the partial factor scores of the MFA construction
+#' @param obj Output returned from the MFA class construction
+#' @param accessor_numer Plot a given accessor by its index number (default: all accessors)
+#' @param wine_number Plot a given wine number by its index number (default: all wines)
+#' @export
+#' @examples
+#' # default
+#' plot_partial_factor_scores(obj)
+#'
 plot_partial_factor_scores <- function(obj, accessor_number=0, wine_number=0){
   plot_factor_scores(obj)
   partial_scores = obj$PartialFactorScores
@@ -229,6 +254,15 @@ plot_partial_factor_scores <- function(obj, accessor_number=0, wine_number=0){
   }
 }
 
+#' @title plot_variable_loadings
+#' @description Plot the variable loadings of the MFA construction
+#' @param obj Output returned from the MFA class construction
+#' @param accessor_numer Plot a given accessor by its index number (default: all accessors)
+#' @export
+#' @examples
+#' # default
+#' plot_variable_loadings(obj)
+#'
 plot_variable_loadings <- function(obj, accessor_number=0){
   partial_scores = obj$PartialFactorScores
   loadings = obj$MatrixLoadings
@@ -255,6 +289,14 @@ plot_variable_loadings <- function(obj, accessor_number=0){
   }
 }
 
+#' @title plot_boot_ratio
+#' @description Plot the bootstrap ratio of the MFA construction
+#' @param obj Output returned from the MFA class construction
+#' @export
+#' @examples
+#' # default
+#' plot_boot_ratio(obj)
+#'
 plot_boot_ratio <- function(obj){
   for(i in 1:obj$ncomps){
     ylim <- c(-1.1 * max(obj$BootstrapRatio[,i]), 1.1 * max(obj$BootstrapRatio[,i]))
