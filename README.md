@@ -12,3 +12,31 @@ install.packages("devtools")
 library(devtools)
 install_github("actang/Multiple-Factor-Analysis")
 ```
+
+### The presentation for the project and package is available at:
+[http://rpubs.com/ankushdd/mfa](http://rpubs.com/ankushdd/mfa)
+
+## Building the package:
+```
+library(devtools)
+# creating documentation (i.e. the Rd files in man/)
+devtools::document()
+# checking documentation
+devtools::check_man()
+# run tests
+devtools::test()
+# checking documentation
+devtools::build_vignettes()
+# building tarball (e.g. oski_0.1.tar.gz)
+devtools::build()
+# checking install
+devtools::install()
+```
+
+- For running the Shiny App, first make sure that you have compiled the package using devtools. After that one can launch the ShinApp by clicking on RunApp in the RStudio (code is in app.R)
+
+### The Shiny App is published at [TODO]
+
+### The vignette is available at [TODO]
+
+
