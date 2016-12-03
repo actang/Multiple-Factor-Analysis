@@ -13,9 +13,6 @@ library(devtools)
 install_github("actang/Multiple-Factor-Analysis")
 ```
 
-### The presentation for the project and package is available at:
-[http://rpubs.com/ankushdd/mfa](http://rpubs.com/ankushdd/mfa)
-
 ## Building the package:
 ```
 library(devtools)
@@ -33,7 +30,10 @@ devtools::build()
 devtools::install()
 ```
 
-- For running the Shiny App, first make sure that you have compiled the package using devtools. After that one can launch the ShinApp by clicking on RunApp in the RStudio (code is in app.R)
+- For running the Shiny App, first make sure that you have built the package using devtools. After that one can launch the ShinApp by clicking on RunApp in the RStudio (code is in app.R)
+
+### The presentation for the project is available at:
+[http://rpubs.com/ankushdd/mfa](http://rpubs.com/ankushdd/mfa)
 
 ### The Shiny App is published at 
 https://atang.shinyapps.io/multiple_factor_analysis/
