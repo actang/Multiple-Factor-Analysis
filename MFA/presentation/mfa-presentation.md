@@ -73,7 +73,7 @@ The number of components is 11
 Complementary Functions
 =======================================================
 ## Summaries of eigenvalues
-This package provides the summaries of eigenvalues that include each component's singular values, eigenvalues, cumulative eigenvalues, \% inertia, and cumulative \% inertia.
+This package provides the summaries of eigenvalues that include each component's singular values, eigenvalues, cumulative eigenvalues, % inertia, and cumulative % inertia.
 
 ```r
 Eigenvalues(mfa_out)
@@ -168,18 +168,18 @@ boot_ratio
 
 ```
              [,1]       [,2]
- [1,] -25.3818677  1.2930381
- [2,] -10.2650856  0.2979006
- [3,]  -8.2152989 -5.2159335
- [4,] -16.7825835 -1.0848265
- [5,]  19.7949146 -1.0573337
- [6,]  14.7892243 -0.9115694
- [7,]   8.4148750  2.0898087
- [8,]  15.9231351  3.7266471
- [9,]  -6.7509280  2.4867346
-[10,]   0.9890915 -5.3304645
-[11,]  -6.1821646  6.5584505
-[12,]   4.9086528 -0.6211018
+ [1,] -25.1344657  1.3391898
+ [2,] -10.1424141  0.3415491
+ [3,]  -8.1583201 -5.2706537
+ [4,] -16.1878472 -1.1364634
+ [5,]  20.1399463 -1.0001678
+ [6,]  14.5840499 -0.9457683
+ [7,]   8.4158509  1.9821122
+ [8,]  15.7983619  3.6649462
+ [9,]  -6.6223419  2.5836422
+[10,]   0.9063082 -5.3315775
+[11,]  -6.3159837  6.5030745
+[12,]   5.2859914 -0.6530110
 ```
 
 Visualization

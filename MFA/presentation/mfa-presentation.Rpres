@@ -66,7 +66,7 @@ print(mfa_out)
 Complementary Functions
 =======================================================
 ## Summaries of eigenvalues
-This package provides the summaries of eigenvalues that include each component's singular values, eigenvalues, cumulative eigenvalues, \% inertia, and cumulative \% inertia.
+This package provides the summaries of eigenvalues that include each component's singular values, eigenvalues, cumulative eigenvalues, % inertia, and cumulative % inertia.
 ```{r}
 Eigenvalues(mfa_out)
 ```
