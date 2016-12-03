@@ -3,6 +3,8 @@ Multiple Factor Analysis Using R
 author:Saurabh Belsare, Ankush Desai, Jieun Kim and Allen Tang
 date: 2016-12-02
 autosize: true
+width: 1400
+height: 1100
 
 Introduction
 ========================================================
@@ -19,7 +21,10 @@ Introduction
   + a scatterplot of the common factor scores,
   + a scatterplot of the partial factor scores by block and by observation,
   + a scatterplot of the loadings of given dimensions (i.e., components), and
-  + a bar-chart for bootstrap ratios. A Shiny App is available for an interactive visualization.
+  + a bar-chart for bootstrap ratios.
+
+
+- A Shiny App is available for an interactive visualization.
 
 Main Function: Creating a `mfa` object
 ========================================================
@@ -54,8 +59,8 @@ Complementary Functions
 The package provides a print method to display basic information about mfa object: the numbers of blocks and components.
 
 ```r
-source("MFAHelperFunctions.R")
-source("mfa.R")
+source("../R/MFAHelperFunctions.R")
+source("../R/mfa.R")
 print(mfa_out)
 ```
 
@@ -163,18 +168,18 @@ boot_ratio
 
 ```
              [,1]       [,2]
- [1,] -25.5514734  1.2250542
- [2,] -10.1243783  0.3570051
- [3,]  -8.2369220 -5.2252653
- [4,] -16.2387589 -1.0899167
- [5,]  20.0580986 -1.0399369
- [6,]  15.6926495 -0.9261838
- [7,]   8.5033049  2.0533183
- [8,]  16.0250162  3.5714549
- [9,]  -6.7191098  2.4796290
-[10,]   0.9944295 -5.3189617
-[11,]  -6.0276074  6.6070450
-[12,]   5.2655096 -0.6154428
+ [1,] -25.3818677  1.2930381
+ [2,] -10.2650856  0.2979006
+ [3,]  -8.2152989 -5.2159335
+ [4,] -16.7825835 -1.0848265
+ [5,]  19.7949146 -1.0573337
+ [6,]  14.7892243 -0.9115694
+ [7,]   8.4148750  2.0898087
+ [8,]  15.9231351  3.7266471
+ [9,]  -6.7509280  2.4867346
+[10,]   0.9890915 -5.3304645
+[11,]  -6.1821646  6.5584505
+[12,]   4.9086528 -0.6211018
 ```
 
 Visualization
@@ -185,7 +190,9 @@ This package provides five types of plots.
 - a scatterplot of the common factor scores,
 - a scatterplot of the partial factor scores by block and by observation,
 - a scatterplot of the loadings of given dimensions (i.e., components),
-- a bar-chart for bootstrap ratios. You can use following functions to create graphics:
+- a bar-chart for bootstrap ratios.
+
+You can use following functions to create graphics:
 
 
 
@@ -231,7 +238,7 @@ plot_variable_loadings(mfa_out)
 
 ![plot of chunk unnamed-chunk-11](mfa-presentation-figure/unnamed-chunk-11-1.png)
 
-A bar-chart for bootstrap ratios. You can use following functions to create graphics
+A bar-chart for bootstrap ratios.
 ================================================
 
 ```r

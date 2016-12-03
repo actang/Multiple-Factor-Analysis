@@ -3,6 +3,8 @@ Multiple Factor Analysis Using R
 author:Saurabh Belsare, Ankush Desai, Jieun Kim and Allen Tang
 date: `r Sys.Date()`
 autosize: true
+width: 1400
+height: 1100
 
 Introduction
 ========================================================
@@ -19,7 +21,10 @@ Introduction
   + a scatterplot of the common factor scores,
   + a scatterplot of the partial factor scores by block and by observation,
   + a scatterplot of the loadings of given dimensions (i.e., components), and
-  + a bar-chart for bootstrap ratios. A Shiny App is available for an interactive visualization.
+  + a bar-chart for bootstrap ratios.
+
+
+- A Shiny App is available for an interactive visualization.
 
 Main Function: Creating a `mfa` object
 ========================================================
@@ -53,8 +58,8 @@ Complementary Functions
 ## Print basic information about mfa object
 The package provides a print method to display basic information about mfa object: the numbers of blocks and components.
 ```{r}
-source("MFAHelperFunctions.R")
-source("mfa.R")
+source("../R/MFAHelperFunctions.R")
+source("../R/mfa.R")
 print(mfa_out)
 ```
 
@@ -113,7 +118,9 @@ This package provides five types of plots.
 - a scatterplot of the common factor scores,
 - a scatterplot of the partial factor scores by block and by observation,
 - a scatterplot of the loadings of given dimensions (i.e., components),
-- a bar-chart for bootstrap ratios. You can use following functions to create graphics:
+- a bar-chart for bootstrap ratios.
+
+You can use following functions to create graphics:
 
 
 ```{r, eval=FALSE}
@@ -146,7 +153,7 @@ A scatterplot of the loadings of given dimensions (i.e., components)
 plot_variable_loadings(mfa_out)
 ```
 
-A bar-chart for bootstrap ratios. You can use following functions to create graphics
+A bar-chart for bootstrap ratios.
 ================================================
 ```{r}
 plot_boot_ratio(mfa_out, 2)
