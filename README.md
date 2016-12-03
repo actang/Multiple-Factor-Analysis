@@ -38,6 +38,6 @@ devtools::install()
 ### The Shiny App is published at 
 https://atang.shinyapps.io/multiple_factor_analysis/
 
-### The vignette is available at [TODO]
+### The vignette is available at [vignette](https://github.com/actang/Multiple-Factor-Analysis/blob/master/MFA/vignettes/mfa-vignette.Rmd?)
 
 
